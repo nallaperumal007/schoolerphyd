@@ -108,9 +108,25 @@ function ScrollReveal({ children, className = '', delay = 0, direction = 'up' })
 }
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  const [loadingExit, setLoadingExit] = useState(false);
   const [activeLink, setActiveLink] = useState('features');
   const [isScrolled, setIsScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Splash Loader effect
+  useEffect(() => {
+    const exitTimer = setTimeout(() => {
+      setLoadingExit(true);
+    }, 1600);
+    const removeTimer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
 
   // Theme customizer state
   const [currentTheme, setCurrentTheme] = useState(THEMES[0]);
@@ -295,13 +311,38 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
   };
 
   return (
-    <div className="min-h-screen position-relative overflow-hidden">
-      {/* Floating backdrop drifts for animations */}
-      <div className="drift-glow-container">
-        <div className="drift-glow-1"></div>
-        <div className="drift-glow-2"></div>
-        <div className="drift-glow-3"></div>
-      </div>
+    <>
+      {loading && (
+        <div className={`splash-loader-wrapper ${loadingExit ? 'loader-exit' : ''}`}>
+          <div className="splash-loader-radial-glow"></div>
+          <div className="splash-loader-particles">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className={`loader-particle particle-${i + 1}`}></div>
+            ))}
+          </div>
+          <div className="splash-loader-content">
+            <div className="loader-logo-container">
+              <div className="loader-logo-ring"></div>
+              <div className="loader-logo-icon">
+                <i className="bi bi-rocket-takeoff-fill"></i>
+              </div>
+            </div>
+            <h1 className="loader-title">CareerOS</h1>
+            <div className="loader-progress-container">
+              <div className="loader-progress-bar"></div>
+            </div>
+            <p className="loader-tagline">Initializing AI Career Platform...</p>
+          </div>
+        </div>
+      )}
+
+      <div className={`min-h-screen position-relative overflow-hidden ${loadingExit ? 'loader-fade-in' : ''}`}>
+        {/* Floating backdrop drifts for animations */}
+        <div className="drift-glow-container">
+          <div className="drift-glow-1"></div>
+          <div className="drift-glow-2"></div>
+          <div className="drift-glow-3"></div>
+        </div>
 
       {/* Dynamic Scroll Progress Bar */}
       <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
@@ -2153,7 +2194,8 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }
 
