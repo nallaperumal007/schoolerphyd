@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   BookOpen, 
   CheckSquare, 
@@ -21,16 +21,95 @@ import {
   Star, 
   Lock, 
   TrendingUp,
-  MapPin,
   Clock,
-  ArrowUpRight
+  ArrowUpRight,
+  ChevronDown,
+  Activity,
+  Check,
+  HelpCircle,
+  Play,
+  Terminal,
+  Zap,
+  CheckCircle
 } from 'lucide-react';
 
-function App() {
-  // Navigation active state
-  const [activeLink, setActiveLink] = useState('features');
+// Theme Presets for Dynamic Styling
+const THEMES = [
+  { name: 'Nebula', color1: '#6366f1', color2: '#d946ef', label: 'Indigo / Magenta' },
+  { name: 'Aurora', color1: '#10b981', color2: '#06b6d4', label: 'Emerald / Teal' },
+  { name: 'Sunset', color1: '#f43f5e', color2: '#fb923c', label: 'Rose / Amber' },
+  { name: 'Quantum', color1: '#3b82f6', color2: '#6366f1', label: 'Blue / Indigo' }
+];
 
-  // Role-based dashboard selection state
+// Custom Hook: Intersection Observer for Scroll Reveals
+function useIntersectionObserver(options = {}) {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsIntersecting(true);
+        if (options.triggerOnce) {
+          observer.unobserve(entry.target);
+        }
+      } else {
+        if (!options.triggerOnce) {
+          setIsIntersecting(false);
+        }
+      }
+    }, options);
+
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [options]);
+
+  return [ref, isIntersecting];
+}
+
+// Wrapper Component for Scroll Animations
+function ScrollReveal({ children, className = '', delay = 0, direction = 'up' }) {
+  const [ref, inView] = useIntersectionObserver({ triggerOnce: true, threshold: 0.05 });
+  
+  const getDirectionClass = () => {
+    switch(direction) {
+      case 'up': return 'reveal-up';
+      case 'down': return 'reveal-down';
+      case 'left': return 'reveal-left';
+      case 'right': return 'reveal-right';
+      case 'fade': return 'reveal-fade';
+      default: return 'reveal-up';
+    }
+  };
+
+  return (
+    <div
+      ref={ref}
+      className={`${className} reveal-base ${getDirectionClass()} ${inView ? 'revealed' : ''}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function App() {
+  const [activeLink, setActiveLink] = useState('features');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Theme customizer state
+  const [currentTheme, setCurrentTheme] = useState(THEMES[0]);
+
+  // Role dashboard selection state
   const [activeRole, setActiveRole] = useState('student');
 
   // AI Sandbox simulation state
@@ -38,26 +117,80 @@ function App() {
   const [aiResponse, setAiResponse] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [aiModule, setAiModule] = useState('advisor'); // advisor, scheduler, doubt, resume
+  const typingTimerRef = useRef(null);
 
-  // Email newsletter state
+  // Email newsletter signup
   const [email, setEmail] = useState('');
   const [emailSubscribed, setEmailSubscribed] = useState(false);
 
-  // Live stats simulation (counters)
-  const [stats, setStats] = useState({ students: 8500, placements: 410, recruiters: 160 });
+  // FAQ Accordion index
+  const [activeFaq, setActiveFaq] = useState(null);
 
+  // Stats Counters
+  const [studentsCount, setStudentsCount] = useState(0);
+  const [placementsCount, setPlacementsCount] = useState(0);
+  const [recruitersCount, setRecruitersCount] = useState(0);
+
+  // Hero Parallax Tilt state
+  const [tilt, setTilt] = useState({ x: -4, y: 4 });
+
+  // Update theme variables dynamically
   useEffect(() => {
+    document.documentElement.style.setProperty('--accent-1', currentTheme.color1);
+    document.documentElement.style.setProperty('--accent-2', currentTheme.color2);
+  }, [currentTheme]);
+
+  // Scroll event monitors
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll > 0) {
+        setScrollProgress((window.scrollY / totalScroll) * 100);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Stats count up animation
+  useEffect(() => {
+    const duration = 1800;
+    const steps = 60;
+    const stepTime = duration / steps;
+    let currentStep = 0;
+    
     const timer = setInterval(() => {
-      setStats(prev => ({
-        students: prev.students < 10000 ? prev.students + Math.floor(Math.random() * 10) + 5 : 10000,
-        placements: prev.placements < 500 ? prev.placements + (Math.random() > 0.7 ? 1 : 0) : 500,
-        recruiters: prev.recruiters < 200 ? prev.recruiters + (Math.random() > 0.85 ? 1 : 0) : 200
-      }));
-    }, 1500);
+      currentStep++;
+      setStudentsCount(Math.min(Math.floor((10000 / steps) * currentStep), 10000));
+      setPlacementsCount(Math.min(Math.floor((500 / steps) * currentStep), 500));
+      setRecruitersCount(Math.min(Math.floor((200 / steps) * currentStep), 200));
+      
+      if (currentStep >= steps) {
+        clearInterval(timer);
+      }
+    }, stepTime);
+
     return () => clearInterval(timer);
   }, []);
 
-  // Pre-configured AI Responses based on sandbox triggers
+  // Character typing simulation
+  const typeText = (text) => {
+    if (typingTimerRef.current) clearInterval(typingTimerRef.current);
+    setAiResponse('');
+    
+    let i = 0;
+    typingTimerRef.current = setInterval(() => {
+      setAiResponse((prev) => prev + text.charAt(i));
+      i++;
+      if (i >= text.length) {
+        clearInterval(typingTimerRef.current);
+      }
+    }, 10);
+  };
+
+  // Predefined prompt responses
   const triggerAiResponse = (moduleType) => {
     setIsAiLoading(true);
     setAiModule(moduleType);
@@ -68,38 +201,38 @@ function App() {
     switch (moduleType) {
       case 'advisor':
         prompt = 'Suggest a 6-month roadmap for Full-Stack Web Development.';
-        responseText = `🤖 Opulent AI Advisor Suggestion:
+        responseText = `🤖 Opulent AI Advisor:
 • Months 1-2: HTML5, CSS3, ES6 JavaScript, and responsive design systems.
-• Month 3: React.js, component lifecycle, state management (Redux/Zustand).
-• Month 4: Node.js, Express, RESTful APIs, and MongoDB/PostgreSQL database structures.
-• Month 5: Building full-stack projects, testing, Git collaboration.
-• Month 6: Capstone Project: Create a SaaS startup app, optimize ATS resume, and start hiring pipelines.
+• Month 3: React.js components, state managers (Zustand/Redux), context APIs.
+• Month 4: Node.js, Express routing, REST APIs, and MongoDB schema designs.
+• Month 5: Full-stack application deployment, Jest testing, and Git operations.
+• Month 6: Portfolio optimization, ATS Resume builder alignment, and interview routing.
 
-🎯 Recommended Course Module: MERN Advanced Path.`;
+Recommended Module: Complete MERN Stack Track.`;
         break;
       case 'scheduler':
-        prompt = 'Reschedule my mock interview to accommodate class timings.';
-        responseText = `📅 Opulent AI Scheduler Action:
-• Detected conflict: "Mock Interview #3" conflicts with "Advanced Data Structures & Algorithms Live Lecture" on Thursday at 3:00 PM.
-• Action: Rescheduled Mock Interview #3 to Friday, June 12th at 4:30 PM (your optimal learning hour).
-• Sync Status: Calendar updated and notification sent to Recruiter (Google Calendar & Outlook).`;
+        prompt = 'Reschedule my mock interview to resolve calendar conflict.';
+        responseText = `📅 Opulent AI Scheduler:
+• Alert: Conflict detected between "Mock Interview #2" and "LMS System Architecture Live Lecture" on Friday at 2:00 PM.
+• Action: Shifted Mock Interview #2 to Monday, June 15th at 4:30 PM (your optimal availability window).
+• Sync Status: System updated. Google Calendar invite re-sent to candidate & recruiter.`;
         break;
       case 'doubt':
         prompt = 'Explain the difference between useEffect dependency array items in React.';
         responseText = `💬 Opulent AI Doubt Assistant:
 In React's useEffect hook:
-1. [] (Empty array): Runs once after the initial render (like componentDidMount).
-2. [prop1, state1] (With variables): Runs on mount AND whenever those variables change.
-3. No dependency array: Runs after every single render.
+1. [] (Empty array): Runs once after the initial render (component mount).
+2. [prop, state] (With dependencies): Runs on mount and whenever those dependencies update.
+3. No dependency array: Executes after every single render of the component.
 
-💡 Code Tip: Always include variables used inside useEffect that change over time, or else you risk stale closures!`;
+Tip: Always declare variables used inside useEffect that change over time to avoid stale closures.`;
         break;
       case 'resume':
         prompt = 'Optimize my resume summary for a Backend Engineer position.';
-        responseText = `📄 Opulent AI Resume Optimizer (ATS-Scored: 94/100):
+        responseText = `📄 Opulent AI Resume Optimizer (Score: 95/100):
 "Results-driven Software Engineer with 2+ years of experience designing and deploying scalable Web APIs. Proven track record in optimizing backend query latency by 40% and containerizing microservices using Docker/Kubernetes. Highly proficient in Node.js, Python, and PostgreSQL architecture."
 
-🔑 Key Keywords Injected: Microservices, API Optimization, Scalability, Docker.`;
+Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`;
         break;
       default:
         break;
@@ -108,15 +241,37 @@ In React's useEffect hook:
     setAiPrompt(prompt);
     
     setTimeout(() => {
-      setAiResponse(responseText);
       setIsAiLoading(false);
-    }, 850);
+      typeText(responseText);
+    }, 600);
   };
 
-  // Run initial AI response once
   useEffect(() => {
     triggerAiResponse('advisor');
+    return () => {
+      if (typingTimerRef.current) clearInterval(typingTimerRef.current);
+    };
   }, []);
+
+  // 3D Parallax Tilt effects
+  const handleMouseMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const normalizedX = (x / rect.width) * 2 - 1;
+    const normalizedY = (y / rect.height) * 2 - 1;
+    
+    setTilt({
+      x: normalizedX * 8,
+      y: -normalizedY * 8
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: -4, y: 4 });
+  };
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -129,47 +284,78 @@ In React's useEffect hook:
     }
   };
 
+  const toggleFaq = (index) => {
+    setActiveFaq(activeFaq === index ? null : index);
+  };
+
   return (
-    <div className="bg-gradient-soft min-h-screen">
+    <div className="min-h-screen text-white position-relative" style={{ backgroundColor: 'var(--bg-dark)' }}>
+      {/* Dynamic Scroll Progress Bar */}
+      <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
+
+      {/* Background grid and decorative glows */}
+      <div className="bg-grid"></div>
+      <div className="bg-radial-glow" style={{ top: '-10%', left: '-5%' }}></div>
+      <div className="bg-radial-glow animate-rotate" style={{ bottom: '10%', right: '-5%' }}></div>
+
       {/* 1. NAVBAR */}
-      <nav className="navbar navbar-expand-lg glass-navbar sticky-top py-3">
+      <nav className={`navbar navbar-expand-lg glass-navbar sticky-top py-3.5 ${isScrolled ? 'navbar-scrolled' : ''}`}>
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#hero">
-            <span className="bg-gradient-soft border d-flex align-items-center justify-content-center me-2" style={{ width: '40px', height: '40px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(99, 102, 241, 0.15)' }}>
-              <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1.25rem' }}></i>
+            <span className="bg-dark border border-secondary d-flex align-items-center justify-content-center me-2.5" style={{ width: '42px', height: '42px', borderRadius: '12px', boxShadow: 'var(--shadow-glow)' }}>
+              <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1.35rem' }}></i>
             </span>
-            <span className="fw-extrabold fs-4 text-gradient">CareerOS</span>
-            <span className="ms-2 badge text-bg-light border text-muted" style={{ fontSize: '0.65rem', verticalAlign: 'middle' }}>v2.0 AI</span>
+            <div>
+              <span className="fw-extrabold fs-4 text-gradient">CareerOS</span>
+              <span className="d-block text-muted text-uppercase fw-bold" style={{ fontSize: '0.55rem', letterSpacing: '0.15em' }}>Opulent Vidya</span>
+            </div>
           </a>
           
-          <button className="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
+          <button className="navbar-toggler border-0 shadow-none text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }}></span>
           </button>
           
           <div className="collapse navbar-collapse" id="navbarContent">
-            <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-3">
+            <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-2 px-lg-3 ${activeLink === 'features' ? 'text-primary' : 'text-muted'}`} href="#features" onClick={() => setActiveLink('features')}>Features</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'features' ? 'text-white' : 'text-muted'}`} href="#features" onClick={() => setActiveLink('features')}>Features</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-2 px-lg-3 ${activeLink === 'problem' ? 'text-primary' : 'text-muted'}`} href="#problem" onClick={() => setActiveLink('problem')}>Why Us</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'problem' ? 'text-white' : 'text-muted'}`} href="#problem" onClick={() => setActiveLink('problem')}>Why Us</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-2 px-lg-3 ${activeLink === 'dashboards' ? 'text-primary' : 'text-muted'}`} href="#dashboards" onClick={() => setActiveLink('dashboards')}>Dashboards</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'dashboards' ? 'text-white' : 'text-muted'}`} href="#dashboards" onClick={() => setActiveLink('dashboards')}>Dashboards</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-2 px-lg-3 ${activeLink === 'ai' ? 'text-primary' : 'text-muted'}`} href="#ai" onClick={() => setActiveLink('ai')}>AI Center</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'ai' ? 'text-white' : 'text-muted'}`} href="#ai" onClick={() => setActiveLink('ai')}>AI Center</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-2 px-lg-3 ${activeLink === 'how-it-works' ? 'text-primary' : 'text-muted'}`} href="#how-it-works" onClick={() => setActiveLink('how-it-works')}>Timeline</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'how-it-works' ? 'text-white' : 'text-muted'}`} href="#how-it-works" onClick={() => setActiveLink('how-it-works')}>Timeline</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-2 px-lg-3 ${activeLink === 'testimonials' ? 'text-primary' : 'text-muted'}`} href="#testimonials" onClick={() => setActiveLink('testimonials')}>Reviews</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'faq' ? 'text-white' : 'text-muted'}`} href="#faq" onClick={() => setActiveLink('faq')}>FAQ</a>
               </li>
             </ul>
+            
+            {/* Real-time Theme selector */}
             <div className="d-flex align-items-center gap-3">
-              <a href="#cta" className="btn btn-secondary-outline border-0 py-2 px-3">Book Demo</a>
-              <a href="#cta" className="btn btn-primary-gradient py-2 px-4">Get Started</a>
+              <div className="d-flex align-items-center gap-2 border-end border-secondary pe-3 me-2">
+                <span className="text-muted fs-8 fw-bold text-uppercase d-none d-xl-inline">Theme:</span>
+                <div className="d-flex gap-1.5">
+                  {THEMES.map((t) => (
+                    <span 
+                      key={t.name}
+                      onClick={() => setCurrentTheme(t)}
+                      className={`accent-dot ${currentTheme.name === t.name ? 'active' : ''}`}
+                      style={{ background: `linear-gradient(135deg, ${t.color1}, ${t.color2})` }}
+                      title={t.label}
+                    ></span>
+                  ))}
+                </div>
+              </div>
+
+              <a href="#cta" className="btn btn-secondary-outline border-0 py-2 px-3.5 d-none d-sm-inline-block">Book Demo</a>
+              <a href="#cta" className="btn btn-primary-gradient py-2 px-4.5">Get Started</a>
             </div>
           </div>
         </div>
@@ -179,1293 +365,1594 @@ In React's useEffect hook:
       <section id="hero" className="position-relative overflow-hidden section-padding pt-5">
         <div className="container position-relative z-2">
           <div className="row align-items-center gy-5">
-            {/* Hero Text */}
+            
+            {/* Text column */}
             <div className="col-lg-6 text-start">
-              <div className="d-inline-flex align-items-center mb-3">
-                <span className="pulse-badge">
-                  <span className="pulse-dot"></span>
-                  The Future of Student Lifecycle Systems
-                </span>
-              </div>
-              <h1 className="display-4 fw-extrabold lh-sm mb-3" style={{ fontSize: '3.5rem' }}>
-                One Platform. <br />
-                <span className="text-gradient">Complete Career Journey.</span>
-              </h1>
-              <p className="lead text-muted mb-4 fs-5" style={{ maxWidth: '540px' }}>
-                Opulent Vidya CareerOS is the premium, AI-powered system integrating LMS, project-building, portfolios, ATS resume creation, global studies, and placement hiring pipelines in one unified ecosystem.
-              </p>
-              
-              <div className="d-flex flex-wrap gap-3 mb-5">
-                <a href="#cta" className="btn btn-primary-gradient px-4 py-3 fs-6 d-inline-flex align-items-center gap-2">
-                  <span>Start Learning</span>
-                  <ArrowRight size={18} />
-                </a>
-                <a href="#cta" className="btn btn-secondary-outline px-4 py-3 fs-6">
-                  Book a Demo
-                </a>
-              </div>
+              <ScrollReveal direction="up">
+                <div className="d-inline-flex align-items-center mb-3">
+                  <span className="pulse-badge">
+                    <span className="pulse-dot"></span>
+                    ✨ Introducing Opulent Vidya CareerOS v2.0 AI
+                  </span>
+                </div>
+              </ScrollReveal>
 
-              <div className="row g-4 pt-3 border-top border-light">
-                <div className="col-auto">
-                  <div className="d-flex align-items-center gap-2">
-                    <CheckCircle2 size={16} className="text-success" />
-                    <span className="text-muted fw-semibold fs-6">No platform hop</span>
-                  </div>
-                </div>
-                <div className="col-auto">
-                  <div className="d-flex align-items-center gap-2">
-                    <CheckCircle2 size={16} className="text-success" />
-                    <span className="text-muted fw-semibold fs-6">AI-optimized outcomes</span>
-                  </div>
-                </div>
-                <div className="col-auto">
-                  <div className="d-flex align-items-center gap-2">
-                    <CheckCircle2 size={16} className="text-success" />
-                    <span className="text-muted fw-semibold fs-6">Real recruiter pipeline</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <ScrollReveal direction="up" delay={100}>
+                <h1 className="display-4 fw-extrabold lh-sm mb-3.5 glow-text" style={{ fontSize: '3.65rem' }}>
+                  One Platform.<br />
+                  <span className="text-gradient">Complete Career Journey.</span>
+                </h1>
+              </ScrollReveal>
 
-            {/* Hero Interactive UI Preview */}
-            <div className="col-lg-6 position-relative">
-              {/* Blurred background glows */}
-              <div className="position-absolute bg-primary rounded-circle filter-blur" style={{ width: '250px', height: '250px', top: '10%', right: '10%', filter: 'blur(100px)', opacity: '0.25', zIndex: '1' }}></div>
-              <div className="position-absolute bg-purple rounded-circle filter-blur" style={{ width: '200px', height: '200px', bottom: '10%', left: '10%', filter: 'blur(80px)', opacity: '0.2', zIndex: '1' }}></div>
-              
-              <div className="position-relative z-2">
-                {/* Main Dashboard Panel Mockup */}
-                <div className="card border-0 rounded-4 shadow-lg p-3 bg-white" style={{ transform: 'perspective(1000px) rotateY(-5deg) rotateX(5deg)', transformStyle: 'preserve-3d' }}>
-                  <div className="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+              <ScrollReveal direction="up" delay={200}>
+                <p className="lead text-secondary mb-4.5 fs-5" style={{ maxWidth: '550px' }}>
+                  A unified SaaS infrastructure integrating LMS, verified project builders, automated internships, ATS resume generators, and recruitment pipelines in a single unified dashboard.
+                </p>
+              </ScrollReveal>
+
+              <ScrollReveal direction="up" delay={300}>
+                <div className="d-flex flex-wrap gap-3 mb-5">
+                  <a href="#cta" className="btn btn-primary-gradient px-4.5 py-3 fs-6 d-inline-flex align-items-center gap-2">
+                    <span>Start Learning</span>
+                    <ArrowRight size={18} />
+                  </a>
+                  <a href="#cta" className="btn btn-secondary-outline px-4.5 py-3 fs-6">
+                    Book Private Demo
+                  </a>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal direction="up" delay={400}>
+                <div className="row g-4 pt-4 border-top border-secondary border-opacity-30">
+                  <div className="col-auto">
                     <div className="d-flex align-items-center gap-2">
-                      <span className="bg-danger rounded-circle d-inline-block" style={{ width: '10px', height: '10px' }}></span>
-                      <span className="bg-warning rounded-circle d-inline-block" style={{ width: '10px', height: '10px' }}></span>
-                      <span className="bg-success rounded-circle d-inline-block" style={{ width: '10px', height: '10px' }}></span>
-                      <span className="text-muted fw-medium ms-2" style={{ fontSize: '0.75rem' }}>student-dashboard.career-os.com</span>
+                      <span className="bg-success bg-opacity-10 text-success p-1 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><Check size={14} /></span>
+                      <span className="text-secondary fw-bold fs-7">No platform hopping</span>
                     </div>
-                    <span className="badge bg-light text-primary border py-1.5 px-2.5 rounded-3 d-flex align-items-center gap-1.5 fs-7">
-                      <Sparkles size={12} />
-                      AI Live
-                    </span>
                   </div>
-
-                  {/* Mock content */}
-                  <div className="row g-3">
-                    {/* User profile widget */}
-                    <div className="col-md-7">
-                      <div className="p-3 border rounded-3 bg-light-subtle h-100">
-                        <div className="d-flex align-items-center gap-3 mb-3">
-                          <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{ width: '42px', height: '42px' }}>SV</div>
-                          <div>
-                            <h6 className="mb-0 fw-bold">Siddharth Varma</h6>
-                            <span className="text-muted" style={{ fontSize: '0.75rem' }}>B.Tech CSE Student (Cohort 2026)</span>
-                          </div>
-                        </div>
-                        <div className="mb-2">
-                          <div className="d-flex justify-content-between text-muted fs-7 mb-1">
-                            <span>Portfolio Complete</span>
-                            <span className="fw-bold text-primary">85%</span>
-                          </div>
-                          <div className="progress" style={{ height: '6px' }}>
-                            <div className="progress-bar bg-primary" role="progressbar" style={{ width: '85%' }}></div>
-                          </div>
-                        </div>
-                        <div className="d-flex justify-content-between text-muted fs-7">
-                          <span>Verified Projects</span>
-                          <span className="fw-bold text-dark">4 / 5</span>
-                        </div>
-                      </div>
+                  <div className="col-auto">
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="bg-success bg-opacity-10 text-success p-1 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><Check size={14} /></span>
+                      <span className="text-secondary fw-bold fs-7">Live AI-guided tracks</span>
                     </div>
-
-                    {/* Stats Widget */}
-                    <div className="col-md-5">
-                      <div className="p-3 border rounded-3 bg-white text-start h-100">
-                        <span className="text-muted fs-7 fw-semibold d-block mb-1">ATS Score</span>
-                        <div className="d-flex align-items-baseline gap-2 mb-2">
-                          <span className="fs-3 fw-bold text-gradient">92/100</span>
-                          <span className="badge bg-success-subtle text-success fs-7">Excellent</span>
-                        </div>
-                        <span className="text-muted fs-7 d-block">Optimized for 14 Backend Roles</span>
-                      </div>
-                    </div>
-
-                    {/* Live Jobs Panel */}
-                    <div className="col-12">
-                      <div className="p-3 border rounded-3 bg-light-subtle text-start">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <h6 className="mb-0 fw-bold fs-7">Active Recruiter Viewings</h6>
-                          <span className="badge bg-danger-subtle text-danger fs-8">2 Live</span>
-                        </div>
-                        <div className="d-flex align-items-center justify-content-between p-2 border-bottom border-light">
-                          <div className="d-flex align-items-center gap-2">
-                            <span className="bg-primary-subtle text-primary rounded p-1.5 d-flex"><Briefcase size={14} /></span>
-                            <div>
-                              <span className="fw-bold fs-7 d-block">Google Cloud India</span>
-                              <span className="text-muted fs-8">Backend Engineer Intern</span>
-                            </div>
-                          </div>
-                          <span className="badge bg-success-subtle text-success fs-8">Interview Stage</span>
-                        </div>
-                        <div className="d-flex align-items-center justify-content-between p-2 pt-2.5">
-                          <div className="d-flex align-items-center gap-2">
-                            <span className="bg-purple-subtle text-purple rounded p-1.5 d-flex"><Briefcase size={14} /></span>
-                            <div>
-                              <span className="fw-bold fs-7 d-block">Razorpay Tech</span>
-                              <span className="text-muted fs-8">Software Engineer - Front End</span>
-                            </div>
-                          </div>
-                          <span className="badge bg-info-subtle text-info fs-8">Shortlisted</span>
-                        </div>
-                      </div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="bg-success bg-opacity-10 text-success p-1 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><Check size={14} /></span>
+                      <span className="text-secondary fw-bold fs-7">Direct hiring pipelines</span>
                     </div>
                   </div>
                 </div>
-
-                {/* Floating Widget 1 */}
-                <div className="hero-card-1 position-absolute bg-white rounded-3 p-3 shadow-md border d-flex align-items-center gap-2" style={{ top: '-40px', left: '-30px', zIndex: '3', maxWidth: '200px' }}>
-                  <div className="bg-success-subtle text-success p-2 rounded-circle d-flex"><CheckSquare size={16} /></div>
-                  <div>
-                    <span className="text-muted fs-8 d-block">LMS Modules</span>
-                    <span className="fw-bold fs-7">98% Attendance</span>
-                  </div>
-                </div>
-
-                {/* Floating Widget 2 */}
-                <div className="hero-card-2 position-absolute bg-white rounded-3 p-3 shadow-md border d-flex align-items-center gap-2.5" style={{ bottom: '-30px', right: '-15px', zIndex: '3', maxWidth: '210px' }}>
-                  <div className="bg-warning-subtle text-warning p-2 rounded-circle d-flex"><Globe size={16} /></div>
-                  <div>
-                    <span className="text-muted fs-8 d-block">Study Abroad Tracker</span>
-                    <span className="fw-bold fs-7">Visa Approved 🇺🇸</span>
-                  </div>
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
+
+            {/* 3D tilt interactive preview */}
+            <div className="col-lg-6">
+              <ScrollReveal direction="fade" delay={200}>
+                <div 
+                  className="position-relative py-4 hero-parallax-card"
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                  style={{ 
+                    transform: `perspective(1000px) rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+                    transformStyle: 'preserve-3d'
+                  }}
+                >
+                  <div className="mock-dashboard-wrapper">
+                    <div className="mock-dashboard-body p-3.5 text-start position-relative">
+                      
+                      <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary border-opacity-30 mb-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <span className="bg-danger rounded-circle d-inline-block" style={{ width: '9px', height: '9px' }}></span>
+                          <span className="bg-warning rounded-circle d-inline-block" style={{ width: '9px', height: '9px' }}></span>
+                          <span className="bg-success rounded-circle d-inline-block" style={{ width: '9px', height: '9px' }}></span>
+                          <span className="text-muted fw-bold ms-2 fs-8" style={{ letterSpacing: '0.05em' }}>STUDENT_PORTAL_SECURE</span>
+                        </div>
+                        <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 py-1.5 px-3 rounded-pill d-flex align-items-center gap-1.5 fs-8">
+                          <span className="pulse-dot"></span>
+                          AI Tracker Active
+                        </span>
+                      </div>
+
+                      <div className="row g-3">
+                        {/* Profile Block */}
+                        <div className="col-md-7">
+                          <div className="p-3 border border-secondary border-opacity-30 rounded-3 bg-dark bg-opacity-40 h-100">
+                            <div className="d-flex align-items-center gap-3 mb-3">
+                              <div className="bg-secondary bg-opacity-10 border border-secondary border-opacity-30 text-white rounded-circle d-flex align-items-center justify-content-center fw-extrabold fs-6" style={{ width: '45px', height: '45px', boxShadow: 'var(--shadow-glow)' }}>
+                                SV
+                              </div>
+                              <div>
+                                <h6 className="mb-0 fw-bold text-white fs-6">Siddharth Varma</h6>
+                                <span className="text-muted fs-8">MERN Stack Cohort #4</span>
+                              </div>
+                            </div>
+                            
+                            {/* SVG Coding hours line chart */}
+                            <div className="mb-3">
+                              <div className="d-flex justify-content-between text-muted fs-8 mb-1">
+                                <span>Weekly Activity (Coding Hours)</span>
+                                <span className="fw-bold text-gradient-teal">34.5 hrs</span>
+                              </div>
+                              <div className="bg-black bg-opacity-40 border border-secondary border-opacity-20 rounded p-2" style={{ height: '70px' }}>
+                                <svg viewBox="0 0 100 30" width="100%" height="100%" preserveAspectRatio="none">
+                                  <path 
+                                    d="M0,25 Q15,10 30,22 T60,5 T90,15 T100,8" 
+                                    fill="none" 
+                                    stroke="url(#chartGradHero)" 
+                                    strokeWidth="2.5" 
+                                    className="svg-chart-path"
+                                  />
+                                  <defs>
+                                    <linearGradient id="chartGradHero" x1="0" y1="0" x2="1" y2="0">
+                                      <stop offset="0%" stopColor="var(--accent-1)" />
+                                      <stop offset="100%" stopColor="var(--accent-2)" />
+                                    </linearGradient>
+                                  </defs>
+                                  <line x1="0" y1="28" x2="100" y2="28" stroke="#1e293b" strokeWidth="1" />
+                                </svg>
+                              </div>
+                            </div>
+
+                            <div className="mb-2 text-start">
+                              <div className="d-flex justify-content-between text-muted fs-8 mb-1">
+                                <span>Course syllabus completion</span>
+                                <span className="fw-bold text-gradient">88%</span>
+                              </div>
+                              <div className="progress" style={{ height: '5px', backgroundColor: '#1e293b' }}>
+                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '88%' }}></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Resume Block */}
+                        <div className="col-md-5">
+                          <div className="p-3 border border-secondary border-opacity-30 rounded-3 bg-dark bg-opacity-40 text-start h-100 d-flex flex-column justify-content-between">
+                            <div>
+                              <span className="text-muted fs-8 fw-extrabold d-block mb-1 text-uppercase">ATS Resume Score</span>
+                              <div className="d-flex align-items-baseline gap-2 mb-2">
+                                <span className="fs-3 fw-extrabold text-gradient-teal">94/100</span>
+                                <span className="badge bg-success bg-opacity-10 text-success fs-8 border border-success border-opacity-20">Top 2%</span>
+                              </div>
+                            </div>
+                            <div className="border-top border-secondary border-opacity-35 pt-2">
+                              <span className="text-muted fs-8 d-block text-uppercase mb-1.5">Verified Badges</span>
+                              <div className="d-flex flex-wrap gap-1">
+                                <span className="badge bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 fs-9">React</span>
+                                <span className="badge bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 fs-9">Node</span>
+                                <span className="badge bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 fs-9">SQL</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Recruiter Pipelines */}
+                        <div className="col-12 text-start">
+                          <div className="p-3 border border-secondary border-opacity-30 rounded-3 bg-dark bg-opacity-40">
+                            <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom border-secondary border-opacity-30">
+                              <h6 className="mb-0 fw-bold fs-7 text-white">Active Recruiter Invites</h6>
+                              <span className="badge bg-danger bg-opacity-10 text-danger fs-8 border border-danger border-opacity-20">2 Live</span>
+                            </div>
+                            
+                            <div className="d-flex align-items-center justify-content-between mb-2 fs-7">
+                              <div className="d-flex align-items-center gap-2">
+                                <span className="bg-primary bg-opacity-10 text-primary border border-primary border-opacity-30 rounded-circle d-flex" style={{ width: '22px', height: '22px', alignItems: 'center', justifyContent: 'center' }}><i className="bi bi-google fs-8"></i></span>
+                                <div>
+                                  <span className="fw-bold d-block text-white">Google Cloud India</span>
+                                  <span className="text-muted" style={{ fontSize: '0.65rem' }}>Backend Engineer Intern</span>
+                                </div>
+                              </div>
+                              <span className="badge bg-success bg-opacity-10 text-success fs-8 border border-success border-opacity-20">Interview Stage</span>
+                            </div>
+                            
+                            <div className="d-flex align-items-center justify-content-between fs-7">
+                              <div className="d-flex align-items-center gap-2">
+                                <span className="bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 rounded-circle d-flex" style={{ width: '22px', height: '22px', alignItems: 'center', justifyContent: 'center' }}><i className="bi bi-stripe fs-8"></i></span>
+                                <div>
+                                  <span className="fw-bold d-block text-white">Stripe Tech</span>
+                                  <span className="text-muted" style={{ fontSize: '0.65rem' }}>Front End Engineer</span>
+                                </div>
+                              </div>
+                              <span className="badge bg-primary bg-opacity-10 text-primary fs-8 border border-primary border-opacity-20">Shortlisted</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Floating elements */}
+                  <div 
+                    className="position-absolute bg-dark rounded-3 p-3 shadow-lg border border-secondary border-opacity-40 d-flex align-items-center gap-2.5" 
+                    style={{ 
+                      top: '-15px', 
+                      left: '-25px', 
+                      zIndex: '3', 
+                      maxWidth: '180px', 
+                      transform: 'translateZ(30px)',
+                      animation: 'float 5s ease-in-out infinite'
+                    }}
+                  >
+                    <div className="bg-success bg-opacity-10 text-success p-2 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><CheckSquare size={16} /></div>
+                    <div className="text-start">
+                      <span className="text-muted fs-8 d-block">Assignments</span>
+                      <span className="fw-extrabold fs-7 text-white">100% Passed</span>
+                    </div>
+                  </div>
+
+                  <div 
+                    className="position-absolute bg-dark rounded-3 p-3 shadow-lg border border-secondary border-opacity-40 d-flex align-items-center gap-2.5" 
+                    style={{ 
+                      bottom: '-15px', 
+                      right: '-15px', 
+                      zIndex: '3', 
+                      maxWidth: '220px', 
+                      transform: 'translateZ(40px)',
+                      animation: 'float-slow 8s ease-in-out infinite' 
+                    }}
+                  >
+                    <div className="bg-warning bg-opacity-10 text-warning p-2 rounded-circle d-flex" style={{ border: '1px solid rgba(234, 179, 8, 0.2)' }}><Globe size={16} /></div>
+                    <div className="text-start">
+                      <span className="text-muted fs-8 d-block">Global Pathway</span>
+                      <span className="fw-extrabold fs-7 text-white">US MS Offer Secured 🇺🇸</span>
+                    </div>
+                  </div>
+
+                </div>
+              </ScrollReveal>
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* 3. TRUST SECTION */}
-      <section className="bg-white border-top border-bottom py-5">
+      <section className="bg-dark bg-opacity-40 border-top border-bottom border-secondary border-opacity-20 py-5">
         <div className="container">
-          <h6 className="text-center text-uppercase fw-extrabold text-muted mb-4 fs-7" style={{ letterSpacing: '0.15em' }}>
-            Trusted by Students, Trainers & Recruiters Globally
-          </h6>
+          <ScrollReveal direction="fade">
+            <h6 className="text-center text-uppercase fw-extrabold text-muted mb-4 fs-8" style={{ letterSpacing: '0.18em' }}>
+              Trusted by 10,000+ Students, Trainers & Recruiters Globally
+            </h6>
+          </ScrollReveal>
           
-          <div className="row row-cols-2 row-cols-md-4 g-4 align-items-center justify-content-center text-center">
-            <div className="col">
-              <div className="trust-logo">
-                <i className="bi bi-microsoft me-2"></i> Microsoft
+          <ScrollReveal direction="up" delay={100}>
+            <div className="row row-cols-2 row-cols-md-4 g-4 align-items-center justify-content-center text-center pb-4">
+              <div className="col">
+                <div className="trust-logo">
+                  <i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft
+                </div>
+              </div>
+              <div className="col">
+                <div className="trust-logo">
+                  <i className="bi bi-amazon me-2.5 fs-5"></i> Amazon
+                </div>
+              </div>
+              <div className="col">
+                <div className="trust-logo">
+                  <i className="bi bi-google me-2.5 fs-5"></i> Google Cloud
+                </div>
+              </div>
+              <div className="col">
+                <div className="trust-logo">
+                  <i className="bi bi-stripe me-2.5 fs-5"></i> Stripe
+                </div>
               </div>
             </div>
-            <div className="col">
-              <div className="trust-logo">
-                <i className="bi bi-amazon me-2"></i> Amazon
-              </div>
-            </div>
-            <div className="col">
-              <div className="trust-logo">
-                <i className="bi bi-google me-2"></i> Google Cloud
-              </div>
-            </div>
-            <div className="col">
-              <div className="trust-logo">
-                <i className="bi bi-stripe me-2"></i> Stripe
-              </div>
-            </div>
-          </div>
+          </ScrollReveal>
 
-          <div className="row g-4 mt-4 text-center justify-content-center">
-            <div className="col-md-3">
-              <div className="p-3">
-                <h2 className="display-6 fw-bold text-gradient mb-1">
-                  {stats.students.toLocaleString()}+
-                </h2>
-                <span className="text-muted fw-semibold">Active Students</span>
+          {/* Counts */}
+          <ScrollReveal direction="up" delay={200}>
+            <div className="row g-4 mt-3 text-center justify-content-center border-top border-secondary border-opacity-25 pt-4">
+              <div className="col-md-3">
+                <div className="p-2">
+                  <h2 className="display-6 fw-extrabold text-gradient mb-1">
+                    {studentsCount.toLocaleString()}+
+                  </h2>
+                  <span className="text-secondary fw-bold fs-7">Active Students</span>
+                </div>
+              </div>
+              <div className="col-md-1 d-none d-md-flex align-items-center justify-content-center">
+                <div className="vr h-75 bg-secondary bg-opacity-20 mx-auto" style={{ width: '1px' }}></div>
+              </div>
+              <div className="col-md-3">
+                <div className="p-2">
+                  <h2 className="display-6 fw-extrabold text-gradient mb-1">
+                    {placementsCount}+
+                  </h2>
+                  <span className="text-secondary fw-bold fs-7">High-Tier Placements</span>
+                </div>
+              </div>
+              <div className="col-md-1 d-none d-md-flex align-items-center justify-content-center">
+                <div className="vr h-75 bg-secondary bg-opacity-20 mx-auto" style={{ width: '1px' }}></div>
+              </div>
+              <div className="col-md-3">
+                <div className="p-2">
+                  <h2 className="display-6 fw-extrabold text-gradient mb-1">
+                    {recruitersCount}+
+                  </h2>
+                  <span className="text-secondary fw-bold fs-7">Verified Hiring Partners</span>
+                </div>
               </div>
             </div>
-            <div className="col-md-1 d-none d-md-flex align-items-center justify-content-center">
-              <div className="vr h-75 bg-light mx-auto"></div>
-            </div>
-            <div className="col-md-3">
-              <div className="p-3">
-                <h2 className="display-6 fw-bold text-gradient mb-1">
-                  {stats.placements}+
-                </h2>
-                <span className="text-muted fw-semibold">High-Tier Placements</span>
-              </div>
-            </div>
-            <div className="col-md-1 d-none d-md-flex align-items-center justify-content-center">
-              <div className="vr h-75 bg-light mx-auto"></div>
-            </div>
-            <div className="col-md-3">
-              <div className="p-3">
-                <h2 className="display-6 fw-bold text-gradient mb-1">
-                  {stats.recruiters}+
-                </h2>
-                <span className="text-muted fw-semibold">Verified Hiring Partners</span>
-              </div>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* 4. PROBLEM → SOLUTION SECTION */}
-      <section id="problem" className="section-padding bg-light-subtle">
+      <section id="problem" className="section-padding position-relative">
         <div className="container">
           <div className="text-center mb-5 pb-3">
-            <span className="role-badge mb-2 d-inline-block">The Paradigm Shift</span>
-            <h2 className="display-5 fw-extrabold text-gradient mb-3">Re-engineering Career Preparation</h2>
-            <p className="lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-              Traditional educational portals force students to jump across 6 separate tools. Opulent Vidya CareerOS unifies this ecosystem.
-            </p>
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">Product Rationale</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">Re-engineering Career Logistics</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                Why does conventional edtech result in high dropouts and poor hiring efficiency? Because tools are scattered. CareerOS unites them.
+              </p>
+            </ScrollReveal>
           </div>
 
-          <div className="row g-5 align-items-stretch">
-            {/* Problems Left Column */}
+          <div className="row g-4 align-items-stretch">
+            {/* Problems */}
             <div className="col-lg-6">
-              <div className="card border-0 rounded-4 shadow-sm h-100 p-4 bg-white d-flex flex-column justify-content-between">
-                <div>
-                  <div className="d-flex align-items-center gap-2.5 mb-4 text-danger">
-                    <i className="bi bi-x-circle-fill fs-4"></i>
-                    <h4 className="mb-0 fw-bold">The Fragmented Mess</h4>
-                  </div>
-                  
-                  <div className="problem-card">
-                    <h5 className="fw-bold fs-6 mb-2">Multiple Disconnected Systems</h5>
-                    <p className="text-muted fs-7 mb-0">
-                      Students study on Coursera, track tasks on spreadsheets, build github portfolios separately, write resumes on Canva, and apply via third-party channels with zero synchronization.
-                    </p>
+              <ScrollReveal direction="left" delay={150} className="h-100">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center gap-2.5 mb-4 text-danger">
+                      <i className="bi bi-x-circle-fill fs-4"></i>
+                      <h4 className="mb-0 fw-extrabold">The Fragmented Setup</h4>
+                    </div>
+                    
+                    <div className="problem-card-dark">
+                      <h5 className="fw-extrabold text-white fs-6 mb-2">6+ Disconnected Platforms</h5>
+                      <p className="text-secondary fs-7 mb-0">
+                        Students learn on Canvas/Moodle, write code locally, compile portfolios on GitHub, construct resumes on Canva, and submit logs via email forms.
+                      </p>
+                    </div>
+
+                    <div className="problem-card-dark">
+                      <h5 className="fw-extrabold text-white fs-6 mb-2">Zero Predictive Visibility</h5>
+                      <p className="text-secondary fs-7 mb-0">
+                        Placement officers cannot trace student study records in real-time. Learning bottlenecks remain completely hidden until graduation limits are passed.
+                      </p>
+                    </div>
+
+                    <div className="problem-card-dark mb-0">
+                      <h5 className="fw-extrabold text-white fs-6 mb-2">Static PDF Hiring Loop</h5>
+                      <p className="text-secondary fs-7 mb-0">
+                        Recruiters scan unverified PDF resume summaries. Auditing actual coding qualities or repository contributions requires expensive manual testing.
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="problem-card">
-                    <h5 className="fw-bold fs-6 mb-2">No Central Career Path Visibility</h5>
-                    <p className="text-muted fs-7 mb-0">
-                      Trainers and placement cells lack visibility of student progress. Predictive analytics is impossible because datasets reside in distinct silos.
-                    </p>
-                  </div>
-
-                  <div className="problem-card mb-0">
-                    <h5 className="fw-bold fs-6 mb-2">Manual Recruiting Pipeline</h5>
-                    <p className="text-muted fs-7 mb-0">
-                      Recruiters review static, outdated PDFs. Finding candidates matching exact backend performance markers takes days of manual review.
-                    </p>
+                  <div className="pt-4 mt-4 border-top border-secondary border-opacity-30">
+                    <span className="text-danger fw-bold fs-7 d-flex align-items-center gap-2">
+                      <i className="bi bi-exclamation-triangle-fill fs-6"></i> Decreases placements conversion rates.
+                    </span>
                   </div>
                 </div>
-
-                <div className="pt-4 mt-3 border-top border-light text-start">
-                  <span className="text-danger fw-semibold fs-7 d-flex align-items-center gap-2">
-                    <i className="bi bi-arrow-right-short fs-5"></i> Results in decreased hireability and resource waste.
-                  </span>
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Solutions Right Column */}
+            {/* Solutions */}
             <div className="col-lg-6">
-              <div className="card border-0 rounded-4 shadow-sm h-100 p-4 bg-white d-flex flex-column justify-content-between" style={{ border: '2px solid rgba(99, 102, 241, 0.15) !important' }}>
-                <div>
-                  <div className="d-flex align-items-center gap-2.5 mb-4 text-success">
-                    <i className="bi bi-check-circle-fill fs-4 text-gradient"></i>
-                    <h4 className="mb-0 fw-bold text-gradient">The CareerOS Solution</h4>
+              <ScrollReveal direction="right" delay={150} className="h-100">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(20, 184, 166, 0.25)' }}>
+                  <div>
+                    <div className="d-flex align-items-center gap-2.5 mb-4 text-gradient-teal">
+                      <i className="bi bi-check-circle-fill fs-4" style={{ color: 'var(--accent-teal)' }}></i>
+                      <h4 className="mb-0 fw-extrabold text-gradient-teal">The CareerOS Ecosystem</h4>
+                    </div>
+
+                    <div className="solution-card-dark">
+                      <h5 className="fw-extrabold text-white fs-6 mb-2">Fully Unified Student Journey</h5>
+                      <p className="text-secondary fs-7 mb-0">
+                        Integrates virtual classrooms, coding labs, verified projects, automated internships, and recruiter pipelines in a single React interface.
+                      </p>
+                    </div>
+
+                    <div className="solution-card-dark">
+                      <h5 className="fw-extrabold text-white fs-6 mb-2">Adaptive AI Performance Audits</h5>
+                      <p className="text-secondary fs-7 mb-0">
+                        Algorithms monitor course study times, code commits, and project scores, dynamically suggesting correct assignments to secure placement.
+                      </p>
+                    </div>
+
+                    <div className="solution-card-dark mb-0">
+                      <h5 className="fw-extrabold text-white fs-6 mb-2">Verified Recruiter Search Portal</h5>
+                      <p className="text-secondary fs-7 mb-0">
+                        Hiring managers filter profiles using verified student project histories. Schedule interviews instantly using verified student credentials.
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="solution-card">
-                    <h5 className="fw-bold text-primary fs-6 mb-2">Unified Student Journey Ecosystem</h5>
-                    <p className="text-muted fs-7 mb-0">
-                      Integrates LMS modules, project tracking repositories, internship reviews, and verified portfolios within a single ecosystem. Everything automatically updates in real-time.
-                    </p>
-                  </div>
-
-                  <div className="solution-card">
-                    <h5 className="fw-bold text-primary fs-6 mb-2">Real-Time AI Progress Analytics</h5>
-                    <p className="text-muted fs-7 mb-0">
-                      AI continuously checks course engagement, project commits, and test outputs. It suggests dynamic corrective actions before student dropouts happen.
-                    </p>
-                  </div>
-
-                  <div className="solution-card mb-0">
-                    <h5 className="fw-bold text-primary fs-6 mb-2">Interactive, Verified Hiring Portals</h5>
-                    <p className="text-muted fs-7 mb-0">
-                      Recruiters search profiles utilizing verified performance records. Hire top candidates instantly with interactive dashboards featuring full portfolio analytics.
-                    </p>
+                  <div className="pt-4 mt-4 border-top border-secondary border-opacity-30">
+                    <span className="text-gradient-teal fw-bold fs-7 d-flex align-items-center gap-2">
+                      <CheckCircle2 size={16} style={{ color: 'var(--accent-teal)' }} /> Improves hiring speeds by over 240%.
+                    </span>
                   </div>
                 </div>
-
-                <div className="pt-4 mt-3 border-top border-light text-start">
-                  <span className="text-success fw-semibold fs-7 d-flex align-items-center gap-2">
-                    <i className="bi bi-check2-circle fs-5"></i> Boosts placement efficiency by over 240%.
-                  </span>
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. CORE FEATURES (GRID STYLE) */}
-      <section id="features" className="section-padding bg-white">
+      {/* 5. CORE FEATURES */}
+      <section id="features" className="section-padding bg-dark bg-opacity-20">
         <div className="container">
           <div className="text-center mb-5 pb-3">
-            <span className="role-badge mb-2 d-inline-block">Product Pillars</span>
-            <h2 className="display-5 fw-extrabold text-gradient mb-3">Enterprise-Grade Architecture</h2>
-            <p className="lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-              Explore the individual modules powering student success throughout the lifecycle.
-            </p>
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">System Architecture</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">Complete Student Lifecycle Suite</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                Opulent Vidya CareerOS includes every module required to support, assess, and place candidates.
+              </p>
+            </ScrollReveal>
           </div>
 
           <div className="row g-4">
-            {/* Feature 1: Smart LMS */}
+            {/* Feature 1 */}
             <div className="col-md-6 col-lg-4">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <BookOpen size={24} />
+              <ScrollReveal direction="up" delay={100} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <BookOpen size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">📚 Smart LMS</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Stream virtual lectures, review course catalogs, track learning hours, and compile in-browser exercise tasks.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Explore LMS modules</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">Smart LMS</h4>
-                <p className="text-muted fs-7 mb-3">
-                  Live virtual classrooms, dynamic recordings index, responsive code playgrounds, and interactive progress markers.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>Live & Record modules</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Feature 2: Assignment Tracker */}
+            {/* Feature 2 */}
             <div className="col-md-6 col-lg-4">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <CheckSquare size={24} />
+              <ScrollReveal direction="up" delay={150} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <CheckSquare size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">📝 Assignment Tracker</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Automated code execution tests, immediate assignment scores, deadlines warnings, and progress metrics.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Review test grading</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">Assignment Tracker</h4>
-                <p className="text-muted fs-7 mb-3">
-                  AI-driven homework scoring, auto code execution, prompt notifications, and predictive completion tracking.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>Instant sandbox run</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Feature 3: Project Portfolio */}
+            {/* Feature 3 */}
             <div className="col-md-6 col-lg-4">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <Briefcase size={24} />
+              <ScrollReveal direction="up" delay={200} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <Briefcase size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">💻 Project Portfolio</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Pull commits from GitHub repositories, showcase live project links, log peer reviews, and compile verified profiles.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Sync GitHub profiles</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">Project Portfolio</h4>
-                <p className="text-muted fs-7 mb-3">
-                  Sync GitHub projects, show live application links, display peer reviews, and construct a verified codebase profile.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>GitHub Sync ready</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Feature 4: Internship System */}
+            {/* Feature 4 */}
             <div className="col-md-6 col-lg-4">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <UserCheck size={24} />
+              <ScrollReveal direction="up" delay={250} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <UserCheck size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">💼 Internship System</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Monitor student internship tasks, compile mentor feedback ratings, document logbooks, and track graduation credits.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Internship workflow tool</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">Internship Management</h4>
-                <p className="text-muted fs-7 mb-3">
-                  Track project sprints, log industry mentor feedbacks, verify hour logs, and sync credit allocations seamlessly.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>Mentor signoff module</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Feature 5: AI Resume Builder */}
+            {/* Feature 5 */}
             <div className="col-md-6 col-lg-4">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <FileText size={24} />
+              <ScrollReveal direction="up" delay={300} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <FileText size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">📄 AI Resume Builder</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Compile ATS-friendly resume versions, scan description keywords, optimize LinkedIn profiles, and draft cover letters.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Launch builder engine</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">AI Resume Optimizer</h4>
-                <p className="text-muted fs-7 mb-3">
-                  Build ATS-optimized resumes in real-time, generate custom cover letters, and score LinkedIn profile completeness.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>ATS Analyzer check</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Feature 6: Study Abroad Module */}
+            {/* Feature 6 */}
             <div className="col-md-6 col-lg-4">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <Globe size={24} />
+              <ScrollReveal direction="up" delay={350} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <Globe size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">🌍 Study Abroad Module</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Browse global partner universities, log visa checklists, track scholarship applications, and prepare IELTS files.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Verify global universities</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">Study Abroad Pathway</h4>
-                <p className="text-muted fs-7 mb-3">
-                  University database matching, visa application tracking, scholarship application support, and language test prep.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>Global application sync</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Feature 7: Placement System */}
+            {/* Feature 7 */}
             <div className="col-md-6 col-lg-4 mx-auto">
-              <div className="hover-card text-start">
-                <div className="feature-icon-wrapper">
-                  <Award size={24} />
+              <ScrollReveal direction="up" delay={400} className="h-100">
+                <div className="feature-card-premium text-start">
+                  <div className="feature-icon-wrapper-premium">
+                    <Award size={26} />
+                  </div>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">🧑💼 Placement System</h4>
+                  <p className="text-secondary fs-7 mb-3.5">
+                    Connect directly to recruiter search parameters, apply via referral loops, and schedule online tests.
+                  </p>
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                    <span>Access recruiter filters</span>
+                    <ChevronRight size={14} className="ms-1" />
+                  </div>
                 </div>
-                <h4 className="fw-bold mb-2 fs-5">Placement Pipelines</h4>
-                <p className="text-muted fs-7 mb-3">
-                  Direct recruiter interview portals, automated referral systems, and hiring manager dashboard profiles.
-                </p>
-                <div className="d-flex align-items-center text-primary fw-bold fs-8">
-                  <span>Recruiter portal access</span>
-                  <ChevronRight size={14} className="ms-1" />
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. HOW IT WORKS (FLOW SECTION) */}
-      <section id="how-it-works" className="section-padding bg-light-subtle overflow-hidden">
-        <div className="container">
+      {/* 6. HOW IT WORKS (FLOW SECTION WITH PARTICLE ANIMATION) */}
+      <section id="how-it-works" className="section-padding bg-dark bg-opacity-40 position-relative overflow-hidden">
+        <div className="container position-relative z-2">
+          
           <div className="text-center mb-5 pb-3">
-            <span className="role-badge mb-2 d-inline-block">The Journey</span>
-            <h2 className="display-5 fw-extrabold text-gradient mb-3">End-to-End Student Lifecycle Flow</h2>
-            <p className="lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-              Watch a student's structured transformation from a new lead to a successfully placed alumni.
-            </p>
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">Integrated Workflow</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">Structured Career Trajectory</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                Opulent Vidya CareerOS controls every stage of the student pathway, ensuring placement outcomes.
+              </p>
+            </ScrollReveal>
           </div>
 
-          <div className="flow-container py-4">
-            <div className="flow-line d-none d-lg-block"></div>
-            
-            <div className="row g-4 row-cols-1 row-cols-md-3 row-cols-lg-5 justify-content-center">
-              {/* Step 1 */}
-              <div className="col">
-                <div className="flow-step-card">
-                  <div className="flow-step-number">01</div>
-                  <h6 className="fw-bold mt-2">Enrollment</h6>
-                  <p className="text-muted fs-8 mb-0">Lead conversion, customized goals, diagnostic tests.</p>
-                </div>
-              </div>
+          {/* Connected Flow Diagram SVG (Desktop view) */}
+          <div className="d-none d-lg-block position-relative my-5" style={{ height: '180px' }}>
+            <svg width="100%" height="100%" viewBox="0 0 1000 120" fill="none">
+              {/* Connector lines with running particle effect */}
+              <path d="M 50 60 L 950 60" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
+              <path 
+                d="M 50 60 L 950 60" 
+                stroke="url(#flowLineGrad)" 
+                strokeWidth="2.5" 
+                className="svg-particle-flow"
+              />
+              
+              <defs>
+                <linearGradient id="flowLineGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="var(--accent-1)" />
+                  <stop offset="50%" stopColor="var(--accent-teal)" />
+                  <stop offset="100%" stopColor="var(--accent-2)" />
+                </linearGradient>
+              </defs>
 
-              {/* Step 2 */}
-              <div className="col">
-                <div className="flow-step-card">
-                  <div className="flow-step-number">02</div>
-                  <h6 className="fw-bold mt-2">Active Learning</h6>
-                  <p className="text-muted fs-8 mb-0">Smart LMS, live lectures, auto homework check.</p>
-                </div>
-              </div>
+              {/* Glowing circles */}
+              <circle cx="100" cy="60" r="14" fill="#090d1a" stroke="var(--accent-1)" strokeWidth="3" />
+              <circle cx="300" cy="60" r="14" fill="#090d1a" stroke="var(--accent-1)" strokeWidth="3" />
+              <circle cx="500" cy="60" r="14" fill="#090d1a" stroke="var(--accent-teal)" strokeWidth="3" />
+              <circle cx="700" cy="60" r="14" fill="#090d1a" stroke="var(--accent-2)" strokeWidth="3" />
+              <circle cx="900" cy="60" r="14" fill="#090d1a" stroke="var(--accent-2)" strokeWidth="3" />
+              
+              {/* Numbers */}
+              <text x="100" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">1</text>
+              <text x="300" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">2</text>
+              <text x="500" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">3</text>
+              <text x="700" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">4</text>
+              <text x="900" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">5</text>
 
-              {/* Step 3 */}
-              <div className="col">
-                <div className="flow-step-card">
-                  <div className="flow-step-number">03</div>
-                  <h6 className="fw-bold mt-2">Portfolios & Intern</h6>
-                  <p className="text-muted fs-8 mb-0">Project showcase, GitHub synchronization, internship credit.</p>
-                </div>
-              </div>
+              {/* Node labels */}
+              <text x="100" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">Enrollment</text>
+              <text x="300" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">Smart LMS</text>
+              <text x="500" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">GitHub Projects</text>
+              <text x="700" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">AI Resume</text>
+              <text x="900" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">Placement</text>
+            </svg>
+          </div>
 
-              {/* Step 4 */}
-              <div className="col">
-                <div className="flow-step-card">
-                  <div className="flow-step-number">04</div>
-                  <h6 className="fw-bold mt-2">AI Optimization</h6>
-                  <p className="text-muted fs-8 mb-0">ATS resume tuning, Global Studies match, interview prep.</p>
-                </div>
+          <div className="row g-4 row-cols-1 row-cols-md-3 row-cols-lg-5 justify-content-center d-lg-none">
+            <div className="col">
+              <div className="timeline-card-dark">
+                <div className="flow-step-number">01</div>
+                <h6 className="fw-extrabold text-white mt-2">Enrollment</h6>
+                <p className="text-secondary fs-8 mb-0">Custom study targets and academic pathways.</p>
               </div>
-
-              {/* Step 5 */}
-              <div className="col">
-                <div className="flow-step-card">
-                  <div className="flow-step-number">05</div>
-                  <h6 className="fw-bold mt-2">Placement & Alumni</h6>
-                  <p className="text-muted fs-8 mb-0">Hiring portal unlock, job match, mentor next cohorts.</p>
-                </div>
+            </div>
+            <div className="col">
+              <div className="timeline-card-dark">
+                <div className="flow-step-number">02</div>
+                <h6 className="fw-extrabold text-white mt-2">Smart LMS</h6>
+                <p className="text-secondary fs-8 mb-0">Virtual lectures, code playgrounds, automatic checks.</p>
+              </div>
+            </div>
+            <div className="col">
+              <div className="timeline-card-dark">
+                <div className="flow-step-number">03</div>
+                <h6 className="fw-extrabold text-white mt-2">GitHub Projects</h6>
+                <p className="text-secondary fs-8 mb-0">Showcasing verified coding contributions to recruiters.</p>
+              </div>
+            </div>
+            <div className="col">
+              <div className="timeline-card-dark">
+                <div className="flow-step-number">04</div>
+                <h6 className="fw-extrabold text-white mt-2">AI Resume</h6>
+                <p className="text-secondary fs-8 mb-0">Optimizing resume summaries and skills keywords.</p>
+              </div>
+            </div>
+            <div className="col">
+              <div className="timeline-card-dark">
+                <div className="flow-step-number">05</div>
+                <h6 className="fw-extrabold text-white mt-2">Placement</h6>
+                <p className="text-secondary fs-8 mb-0">Routing verified portfolios to corporate search feeds.</p>
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* 7. ROLE-BASED DASHBOARD SECTION (DYNAMIC INTERACTION) */}
-      <section id="dashboards" className="section-padding bg-white">
+      {/* 7. ROLE-BASED DASHBOARD SECTION (DYNAMIC PREVIEW PANEL) */}
+      <section id="dashboards" className="section-padding bg-dark bg-opacity-20">
         <div className="container">
+          
           <div className="text-center mb-5 pb-3">
-            <span className="role-badge mb-2 d-inline-block">Multi-Tenant Portals</span>
-            <h2 className="display-5 fw-extrabold text-gradient mb-3">Custom Dashboards for Every Role</h2>
-            <p className="lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-              Opulent Vidya CareerOS configures personalized interfaces, access rules, and metric views for all six main user personas.
-            </p>
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">Multi-Tenant Interfaces</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">Tailored Panels for All Participants</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                Opulent Vidya CareerOS configures personalized interfaces, access logs, and metrics for each system role.
+              </p>
+            </ScrollReveal>
           </div>
 
           <div className="row g-4 align-items-center">
-            {/* Role List buttons */}
+            {/* Roles selector buttons */}
             <div className="col-lg-4">
-              <div className="pe-0 pe-lg-3">
-                
-                <button 
-                  onClick={() => setActiveRole('student')}
-                  className={`role-tab-btn ${activeRole === 'student' ? 'active' : ''}`}
-                >
-                  <span className="bg-primary-subtle text-primary p-2 rounded-3 me-3 d-flex"><GraduationCap size={20} /></span>
-                  <div>
-                    <span className="d-block fw-bold fs-6">👨🎓 Student Dashboard</span>
-                    <span className="text-muted fs-8 fw-normal">Progress & interview analytics</span>
-                  </div>
-                </button>
+              <ScrollReveal direction="left" delay={100}>
+                <div className="pe-0 pe-lg-2">
+                  <button 
+                    onClick={() => setActiveRole('student')}
+                    className={`role-tab-btn-dark ${activeRole === 'student' ? 'active' : ''}`}
+                  >
+                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><GraduationCap size={20} /></span>
+                    <div>
+                      <span className="d-block fw-bold fs-6">👨🎓 Student Dashboard</span>
+                      <span className="text-muted fs-8 fw-normal">Progress & hiring preparation</span>
+                    </div>
+                  </button>
 
-                <button 
-                  onClick={() => setActiveRole('trainer')}
-                  className={`role-tab-btn ${activeRole === 'trainer' ? 'active' : ''}`}
-                >
-                  <span className="bg-purple-subtle text-purple p-2 rounded-3 me-3 d-flex"><Users size={20} /></span>
-                  <div>
-                    <span className="d-block fw-bold fs-6">👨🏫 Trainer Panel</span>
-                    <span className="text-muted fs-8 fw-normal">Attendance logs & grades</span>
-                  </div>
-                </button>
+                  <button 
+                    onClick={() => setActiveRole('trainer')}
+                    className={`role-tab-btn-dark ${activeRole === 'trainer' ? 'active' : ''}`}
+                  >
+                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Users size={20} /></span>
+                    <div>
+                      <span className="d-block fw-bold fs-6">👨🏫 Trainer Panel</span>
+                      <span className="text-muted fs-8 fw-normal">Attendance logs & grades auditing</span>
+                    </div>
+                  </button>
 
-                <button 
-                  onClick={() => setActiveRole('recruiter')}
-                  className={`role-tab-btn ${activeRole === 'recruiter' ? 'active' : ''}`}
-                >
-                  <span className="bg-success-subtle text-success p-2 rounded-3 me-3 d-flex"><Briefcase size={20} /></span>
-                  <div>
-                    <span className="d-block fw-bold fs-6">🧑💼 Recruiter Portal</span>
-                    <span className="text-muted fs-8 fw-normal">Candidate filters & job pipelines</span>
-                  </div>
-                </button>
+                  <button 
+                    onClick={() => setActiveRole('recruiter')}
+                    className={`role-tab-btn-dark ${activeRole === 'recruiter' ? 'active' : ''}`}
+                  >
+                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Briefcase size={20} /></span>
+                    <div>
+                      <span className="d-block fw-bold fs-6">🧑💼 Recruiter Portal</span>
+                      <span className="text-muted fs-8 fw-normal">Candidate search filters</span>
+                    </div>
+                  </button>
 
-                <button 
-                  onClick={() => setActiveRole('parent')}
-                  className={`role-tab-btn ${activeRole === 'parent' ? 'active' : ''}`}
-                >
-                  <span className="bg-info-subtle text-info p-2 rounded-3 me-3 d-flex"><UserCheck size={20} /></span>
-                  <div>
-                    <span className="d-block fw-bold fs-6">👨👩👧 Parent View</span>
-                    <span className="text-muted fs-8 fw-normal">Grade cards & fee invoices</span>
-                  </div>
-                </button>
+                  <button 
+                    onClick={() => setActiveRole('parent')}
+                    className={`role-tab-btn-dark ${activeRole === 'parent' ? 'active' : ''}`}
+                  >
+                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><UserCheck size={20} /></span>
+                    <div>
+                      <span className="d-block fw-bold fs-6">👨👩👧 Parent View</span>
+                      <span className="text-muted fs-8 fw-normal">Grade cards & invoices</span>
+                    </div>
+                  </button>
 
-                <button 
-                  onClick={() => setActiveRole('study')}
-                  className={`role-tab-btn ${activeRole === 'study' ? 'active' : ''}`}
-                >
-                  <span className="bg-warning-subtle text-warning p-2 rounded-3 me-3 d-flex"><Globe size={20} /></span>
-                  <div>
-                    <span className="d-block fw-bold fs-6">🎓 Study Abroad Advisor</span>
-                    <span className="text-muted fs-8 fw-normal">Visa workflows & university database</span>
-                  </div>
-                </button>
+                  <button 
+                    onClick={() => setActiveRole('study')}
+                    className={`role-tab-btn-dark ${activeRole === 'study' ? 'active' : ''}`}
+                  >
+                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Globe size={20} /></span>
+                    <div>
+                      <span className="d-block fw-bold fs-6">🎓 Study Abroad Advisor</span>
+                      <span className="text-muted fs-8 fw-normal">Visa tracking & university programs</span>
+                    </div>
+                  </button>
 
-                <button 
-                  onClick={() => setActiveRole('admin')}
-                  className={`role-tab-btn ${activeRole === 'admin' ? 'active' : ''}`}
-                >
-                  <span className="bg-danger-subtle text-danger p-2 rounded-3 me-3 d-flex"><Shield size={20} /></span>
-                  <div>
-                    <span className="d-block fw-bold fs-6">🛠️ Admin Panel</span>
-                    <span className="text-muted fs-8 fw-normal">Global settings & cohort builder</span>
-                  </div>
-                </button>
-
-              </div>
+                  <button 
+                    onClick={() => setActiveRole('admin')}
+                    className={`role-tab-btn-dark ${activeRole === 'admin' ? 'active' : ''}`}
+                  >
+                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Shield size={20} /></span>
+                    <div>
+                      <span className="d-block fw-bold fs-6">🛠️ Admin Panel</span>
+                      <span className="text-muted fs-8 fw-normal">Cohort setups & global stats</span>
+                    </div>
+                  </button>
+                </div>
+              </ScrollReveal>
             </div>
 
-            {/* Dynamic Dashboard Mockup display */}
+            {/* Dashboard Mockup Display */}
             <div className="col-lg-8">
-              <div className="mock-dashboard">
-                {/* Header bar */}
-                <div className="d-flex align-items-center justify-content-between p-3 border-bottom bg-light">
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="badge text-bg-dark text-uppercase fs-8 px-2 py-1">
-                      {activeRole === 'study' ? 'study_abroad' : activeRole} Portal
-                    </span>
-                    <span className="text-muted fs-7">Secure SSL Connection</span>
-                  </div>
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="bg-success rounded-circle" style={{ width: '8px', height: '8px' }}></span>
-                    <span className="text-muted fs-8">System Sync: Live</span>
+              <ScrollReveal direction="right" delay={200}>
+                <div className="mock-dashboard-wrapper">
+                  <div className="mock-dashboard-body">
+                    
+                    {/* Header bar */}
+                    <div className="d-flex align-items-center justify-content-between p-3 border-bottom border-secondary border-opacity-20 bg-dark bg-opacity-50">
+                      <div className="d-flex align-items-center gap-2">
+                        <span className="badge text-bg-dark text-uppercase fs-8 px-2 py-1.5 rounded-2 border border-secondary border-opacity-40">
+                          {activeRole === 'study' ? 'study_abroad' : activeRole} Portal
+                        </span>
+                        <span className="text-muted fs-8 d-flex align-items-center gap-1.5"><Lock size={12} /> SSL Secured</span>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <span className="bg-success rounded-circle" style={{ width: '8px', height: '8px' }}></span>
+                        <span className="text-muted fs-8">System Sync: Live</span>
+                      </div>
+                    </div>
+
+                    {/* Main content body based on role */}
+                    <div className="p-4 text-start">
+                      
+                      {activeRole === 'student' && (
+                        <div>
+                          <div className="row g-3 mb-4">
+                            <div className="col-md-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Active Syllabus Topic</span>
+                                <h6 className="fw-extrabold mb-1 text-white">Advanced React Hooks & Context API</h6>
+                                <span className="text-primary fs-8 fw-bold d-flex align-items-center gap-1.5"><Clock size={12} /> Ends in 40 mins</span>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Next Homework Assignment</span>
+                                <h6 className="fw-extrabold mb-1 text-white">PostgreSQL DB Optimization Tasks</h6>
+                                <span className="text-danger fs-8 fw-bold d-flex align-items-center gap-1.5"><i className="bi bi-exclamation-triangle-fill"></i> Due in 12 hours</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <h6 className="fw-extrabold mb-3 text-white fs-7">Live Progress & Preparation Index</h6>
+                          <div className="p-3.5 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-30 mb-3">
+                            <div className="d-flex justify-content-between text-muted fs-8 mb-2">
+                              <span>Verified Projects Completed</span>
+                              <span className="fw-extrabold text-success">4 / 5 Github Verified</span>
+                            </div>
+                            <div className="progress mb-4" style={{ height: '8px', backgroundColor: '#1e293b' }}>
+                              <div className="progress-bar bg-success" style={{ width: '80%' }}></div>
+                            </div>
+                            
+                            <div className="row g-3">
+                              <div className="col-6 col-sm-3">
+                                <span className="text-muted fs-8 d-block text-uppercase mb-1">Resume Score</span>
+                                <span className="fw-extrabold text-white fs-5">94 / 100</span>
+                              </div>
+                              <div className="col-6 col-sm-3">
+                                <span className="text-muted fs-8 d-block text-uppercase mb-1">Mock test status</span>
+                                <span className="fw-extrabold text-white fs-5">85% Passed</span>
+                              </div>
+                              <div className="col-6 col-sm-3">
+                                <span className="text-muted fs-8 d-block text-uppercase mb-1">Mentor Rating</span>
+                                <span className="fw-extrabold text-white fs-5">4.8 / 5.0</span>
+                              </div>
+                              <div className="col-6 col-sm-3">
+                                <span className="text-muted fs-8 d-block text-uppercase mb-1">Interview Invites</span>
+                                <span className="fw-extrabold text-primary fs-5">3 Active</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeRole === 'trainer' && (
+                        <div>
+                          <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h6 className="fw-extrabold mb-0 text-white">Cohort Overview: Full-Stack Web Dev (Cohort B)</h6>
+                            <span className="badge bg-primary bg-opacity-10 text-primary fs-8 border border-primary border-opacity-20">Total: 48 Registered</span>
+                          </div>
+                          
+                          <div className="row g-3 mb-4 text-center">
+                            <div className="col-md-4">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Syllabus Attendance</span>
+                                <h4 className="fw-extrabold mb-0 text-success">94.2%</h4>
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Avg GitHub Commits</span>
+                                <h4 className="fw-extrabold mb-0 text-primary">4.1 / wk</h4>
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Tasks Pending Grading</span>
+                                <h4 className="fw-extrabold mb-0 text-warning">14 Tasks</h4>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <h6 className="fw-extrabold mb-3 text-white">Priority Action Alerts</h6>
+                          <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-danger bg-opacity-10 text-danger-emphasis fs-7 mb-2 d-flex justify-content-between align-items-center" style={{ border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                            <span className="d-flex align-items-center gap-2">
+                              <i className="bi bi-exclamation-triangle-fill text-danger"></i>
+                              <span className="text-white"><strong>Aaryan Sen</strong> has not submitted Portfolio Project #3 (Due 2d ago)</span>
+                            </span>
+                            <button onClick={() => alert('Pinged Aaryan Sen regarding Portfolio Project #3')} className="btn btn-sm btn-danger py-1 px-2.5 fs-8">Ping Student</button>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeRole === 'recruiter' && (
+                        <div>
+                          <div className="d-flex justify-content-between align-items-center mb-3.5">
+                            <h6 className="fw-extrabold mb-0 text-white">Search Qualified Student Database</h6>
+                            <span className="text-muted fs-8 fw-semibold">Filtered by Verified Projects</span>
+                          </div>
+                          
+                          <div className="input-group mb-3.5 shadow-sm rounded-3">
+                            <span className="input-group-text bg-dark border-secondary text-muted border-end-0"><Search size={18} /></span>
+                            <input type="text" className="form-control bg-dark border-secondary text-white border-start-0 py-2.5 fs-7" placeholder="e.g. 'React', 'Node.js', ATS Score > 90..." defaultValue="React, PostgreSQL, ATS Score > 90" />
+                            <button className="btn btn-primary-gradient px-4.5 py-2.5 fs-7">Search</button>
+                          </div>
+
+                          {/* Matching circles */}
+                          <div className="row g-3 mb-3">
+                            <div className="col-md-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex align-items-center justify-content-between">
+                                <div>
+                                  <span className="text-muted fs-8 d-block text-uppercase mb-0.5">Top Matched Candidate</span>
+                                  <span className="fw-extrabold text-white d-block">Sneha Reddy</span>
+                                  <span className="text-muted fs-8">95% Match Score</span>
+                                </div>
+                                <svg width="45" height="45" viewBox="0 0 36 36">
+                                  <path stroke="#1e293b" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <path stroke="var(--accent-1)" strokeWidth="3.5" strokeDasharray="95, 100" fill="none" strokeLinecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <text x="18" y="21.5" className="fw-extrabold" fill="#fff" fontSize="10" textAnchor="middle">95</text>
+                                </svg>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex align-items-center justify-content-between">
+                                <div>
+                                  <span className="text-muted fs-8 d-block text-uppercase mb-0.5">Recommended Candidate</span>
+                                  <span className="fw-extrabold text-white d-block">Vikas Khanna</span>
+                                  <span className="text-muted fs-8">91% Match Score</span>
+                                </div>
+                                <svg width="45" height="45" viewBox="0 0 36 36">
+                                  <path stroke="#1e293b" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <path stroke="var(--accent-2)" strokeWidth="3.5" strokeDasharray="91, 100" fill="none" strokeLinecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <text x="18" y="21.5" className="fw-extrabold" fill="#fff" fontSize="10" textAnchor="middle">91</text>
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeRole === 'parent' && (
+                        <div>
+                          <div className="d-flex align-items-center gap-3 mb-4">
+                            <div className="bg-secondary bg-opacity-10 text-white rounded-circle d-flex align-items-center justify-content-center fw-extrabold fs-6" style={{ width: '46px', height: '46px', boxShadow: '0 4px 10px rgba(99, 102, 241, 0.15)' }}>KV</div>
+                            <div>
+                              <h6 className="mb-0 fw-bold text-white">Ward Name: Kabir Varma</h6>
+                              <span className="text-muted fs-8">MERN Cohort B — Student ID: #KV901</span>
+                            </div>
+                          </div>
+                          
+                          <div className="row g-3 mb-4 text-start">
+                            <div className="col-sm-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Weekly Attendance Rate</span>
+                                <span className="fw-extrabold text-success fs-5">98% (Exceeds Target)</span>
+                              </div>
+                            </div>
+                            <div className="col-sm-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Latest Exam Grade</span>
+                                <span className="fw-extrabold text-primary fs-5">A+ (Advanced APIs)</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <h6 className="fw-extrabold mb-3 text-white">Installment Receipts</h6>
+                          <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex justify-content-between align-items-center">
+                            <div>
+                              <span className="fw-extrabold fs-7 d-block text-white">Term Installment #2</span>
+                              <span className="text-muted fs-8">Paid on June 01, 2026</span>
+                            </div>
+                            <span className="badge bg-success bg-opacity-10 text-success py-2 px-3 fs-8 rounded-pill d-flex align-items-center gap-1.5 border border-success border-opacity-20">Paid <i className="bi bi-check-circle"></i></span>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeRole === 'study' && (
+                        <div>
+                          <div className="d-flex justify-content-between align-items-center mb-4">
+                            <h6 className="fw-extrabold mb-0 text-white">Global Studies Pathway Integration</h6>
+                            <span className="badge bg-warning bg-opacity-10 text-warning fs-8 border border-warning border-opacity-20">4 Partner Institutions</span>
+                          </div>
+                          
+                          <div className="row g-3 mb-4">
+                            <div className="col-md-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="badge bg-primary bg-opacity-10 text-primary mb-2 border border-primary border-opacity-20">GERMANY</span>
+                                <h6 className="fw-extrabold text-white">TU Munich (TUM)</h6>
+                                <p className="text-muted fs-8 mb-2">Target Program: MS Informatics (Winter Intake)</p>
+                                <span className="text-success fs-8 fw-semibold"><i className="bi bi-check-circle-fill me-1"></i> Application Verified</span>
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="badge bg-purple bg-opacity-10 text-purple mb-2 border border-purple border-opacity-20">UNITED STATES</span>
+                                <h6 className="fw-extrabold text-white">Northeastern University</h6>
+                                <p className="text-muted fs-8 mb-2">Target Program: MS Computer Science (Fall Intake)</p>
+                                <span className="text-warning fs-8 fw-semibold"><Clock size={12} className="me-1" /> Document Auditing Stage</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <h6 className="fw-extrabold mb-3 text-white">Required Documents Progress</h6>
+                          <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex justify-content-between fs-8 text-muted">
+                            <div>
+                              <span className="d-block">IELTS Target</span>
+                              <span className="fw-bold text-white">7.5 Band (Verified)</span>
+                            </div>
+                            <div>
+                              <span className="d-block">WES Credentials</span>
+                              <span className="fw-bold text-success">Submitted</span>
+                            </div>
+                            <div>
+                              <span className="d-block">Visa Interview</span>
+                              <span className="fw-bold text-primary">Scheduled July 10</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeRole === 'admin' && (
+                        <div>
+                          <h6 className="fw-extrabold mb-4 text-white">Global Administration Panel</h6>
+                          
+                          <div className="row g-3 mb-4 text-center">
+                            <div className="col-6 col-md-3">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Cohorts Active</span>
+                                <span className="fw-extrabold text-white fs-4">24 Cohorts</span>
+                              </div>
+                            </div>
+                            <div className="col-6 col-md-3">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Academic Staff</span>
+                                <span className="fw-extrabold text-white fs-4">18 Trainers</span>
+                              </div>
+                            </div>
+                            <div className="col-6 col-md-3">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">System Uptime</span>
+                                <span className="fw-extrabold text-success fs-4">99.98%</span>
+                              </div>
+                            </div>
+                            <div className="col-6 col-md-3">
+                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                                <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">API Requests</span>
+                                <span className="fw-extrabold text-primary fs-4">42K / hr</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="card border-0 p-3 bg-dark text-white rounded-3">
+                            <div className="d-flex justify-content-between align-items-center mb-2">
+                              <span className="text-success fs-8 fw-bold d-flex align-items-center gap-1.5"><Activity size={14} /> System Activity Logs</span>
+                              <span className="badge bg-secondary fs-9">Real-Time</span>
+                            </div>
+                            <pre className="mb-0 fs-8 text-white-50 overflow-hidden" style={{ maxHeight: '70px', fontFamily: 'monospace' }}>
+                              [14:32:01] AUTH: Student KV901 token refresh success<br />
+                              [14:32:05] INTEGRATION: Automated Github pull for SV998 - OK<br />
+                              [14:32:11] AI: Injected ATS suggestions for 14 candidates
+                            </pre>
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+
                   </div>
                 </div>
-
-                {/* Main Body depending on active role */}
-                <div className="p-4 text-start">
-                  
-                  {activeRole === 'student' && (
-                    <div>
-                      <div className="row g-3 mb-4">
-                        <div className="col-md-6">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">CURRENT CLASS MODULE</span>
-                            <h6 className="fw-bold mb-1">Advanced React Hooks & Context API</h6>
-                            <span className="text-primary fs-8 fw-semibold"><i className="bi bi-clock me-1"></i> Ends in 40 mins</span>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">UPCOMING ASSIGNMENT</span>
-                            <h6 className="fw-bold mb-1">Full-Stack Database Optimization</h6>
-                            <span className="text-danger fs-8 fw-semibold"><i className="bi bi-exclamation-triangle me-1"></i> Due in 12 hours</span>
-                          </div>
-                        </div>
-                      </div>
-                      <h6 className="fw-bold mb-3">Placement Preparation Status</h6>
-                      <div className="p-3 border rounded-3 bg-white mb-3">
-                        <div className="d-flex justify-content-between text-muted fs-7 mb-2">
-                          <span>Portfolio Verifications completed</span>
-                          <span className="fw-bold text-success">4 / 5 Projects verified</span>
-                        </div>
-                        <div className="progress mb-3" style={{ height: '8px' }}>
-                          <div className="progress-bar bg-success" style={{ width: '80%' }}></div>
-                        </div>
-                        <div className="row g-3">
-                          <div className="col-6 col-sm-3">
-                            <span className="text-muted fs-8 d-block">Resume Score</span>
-                            <span className="fw-bold text-dark fs-5">88/100</span>
-                          </div>
-                          <div className="col-6 col-sm-3">
-                            <span className="text-muted fs-8 d-block">Mock Tests</span>
-                            <span className="fw-bold text-dark fs-5">Passed (85%)</span>
-                          </div>
-                          <div className="col-6 col-sm-3">
-                            <span className="text-muted fs-8 d-block">Mentors Rating</span>
-                            <span className="fw-bold text-dark fs-5">4.8 / 5.0</span>
-                          </div>
-                          <div className="col-6 col-sm-3">
-                            <span className="text-muted fs-8 d-block">Interview Invites</span>
-                            <span className="fw-bold text-primary fs-5">3 Active</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeRole === 'trainer' && (
-                    <div>
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h6 className="fw-bold mb-0">Cohort Overview: MERN Developers (Cohort A)</h6>
-                        <span className="badge bg-primary fs-8">Total: 48 Students</span>
-                      </div>
-                      <div className="row g-3 mb-3 text-center">
-                        <div className="col-md-4">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">COHORT ATTENDANCE</span>
-                            <h4 className="fw-bold mb-0 text-success">94.2%</h4>
-                          </div>
-                        </div>
-                        <div className="col-md-4">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">AVG PROJECTS SUBMITTED</span>
-                            <h4 className="fw-bold mb-0 text-primary">4.1 / 5</h4>
-                          </div>
-                        </div>
-                        <div className="col-md-4">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">PENDING GRADING</span>
-                            <h4 className="fw-bold mb-0 text-warning">14 Tasks</h4>
-                          </div>
-                        </div>
-                      </div>
-                      <h6 className="fw-bold mb-3">Flagged Students (Low Activity alert)</h6>
-                      <div className="p-2.5 border rounded-3 bg-danger-subtle text-danger-emphasis fs-7 mb-2 d-flex justify-content-between align-items-center">
-                        <span>⚠️ <strong>Aaryan Sen</strong> has not submitted Assignment #4 (Due 2 days ago)</span>
-                        <a href="#cta" className="btn btn-sm btn-danger py-1 fs-8">Ping Student</a>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeRole === 'recruiter' && (
-                    <div>
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h6 className="fw-bold mb-0">Smart Candidate Database Search</h6>
-                        <span className="text-muted fs-8">Updated 5m ago</span>
-                      </div>
-                      <div className="input-group mb-3 shadow-sm rounded-3">
-                        <span className="input-group-text bg-white border-end-0 text-muted"><Search size={18} /></span>
-                        <input type="text" className="form-control border-start-0 py-2.5 fs-7" placeholder="Search skills: 'React', 'Node.js', ATS Score > 85, verified project links..." defaultValue="React, Node.js, postgresql" />
-                        <button className="btn btn-primary-gradient px-3 py-2.5 fs-7">Search</button>
-                      </div>
-                      <div className="table-responsive">
-                        <table className="table table-hover border align-middle fs-7 mb-0">
-                          <thead className="table-light">
-                            <tr>
-                              <th>Candidate</th>
-                              <th>ATS Score</th>
-                              <th>Verified Projects</th>
-                              <th>Status</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="fw-bold">Sneha Reddy</td>
-                              <td><span className="badge bg-success-subtle text-success">95</span></td>
-                              <td>5 Github Verified</td>
-                              <td><span className="badge text-bg-warning">Invited</span></td>
-                              <td><button className="btn btn-sm btn-outline-primary py-1 fs-8">View File</button></td>
-                            </tr>
-                            <tr>
-                              <td className="fw-bold">Vikas Khanna</td>
-                              <td><span className="badge bg-success-subtle text-success">91</span></td>
-                              <td>4 Github Verified</td>
-                              <td><span className="badge text-bg-success">Shortlisted</span></td>
-                              <td><button className="btn btn-sm btn-outline-primary py-1 fs-8">View File</button></td>
-                            </tr>
-                            <tr>
-                              <td className="fw-bold">Diya Mehta</td>
-                              <td><span className="badge bg-success-subtle text-success">88</span></td>
-                              <td>5 Github Verified</td>
-                              <td><span className="badge text-bg-light">Reviewing</span></td>
-                              <td><button className="btn btn-sm btn-outline-primary py-1 fs-8">View File</button></td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeRole === 'parent' && (
-                    <div>
-                      <div className="d-flex align-items-center gap-3 mb-4">
-                        <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{ width: '45px', height: '45px' }}>KV</div>
-                        <div>
-                          <h6 className="mb-0 fw-bold">Ward Name: Kabir Varma</h6>
-                          <span className="text-muted fs-8">MERN Cohort B — Student ID: #SV998</span>
-                        </div>
-                      </div>
-                      <div className="row g-3 mb-4 text-start">
-                        <div className="col-sm-6">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">TOTAL ATTENDANCE</span>
-                            <span className="fw-bold text-dark fs-5">98% (Exceeded Target)</span>
-                          </div>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">LATEST TEST GRADE</span>
-                            <span className="fw-bold text-success fs-5">A+ (Advanced APIs)</span>
-                          </div>
-                        </div>
-                      </div>
-                      <h6 className="fw-bold mb-3">Fee Payment & Invoices</h6>
-                      <div className="p-3 border rounded-3 bg-light d-flex justify-content-between align-items-center">
-                        <div>
-                          <span className="fw-bold fs-7 d-block">Cohort Installment #2</span>
-                          <span className="text-muted fs-8">Due date: June 20, 2026</span>
-                        </div>
-                        <span className="badge text-bg-success py-2 px-3 fs-8">Paid <i className="bi bi-check-circle ms-1"></i></span>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeRole === 'study' && (
-                    <div>
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h6 className="fw-bold mb-0">Study Abroad Pathways Integration</h6>
-                        <span className="badge bg-warning text-dark fs-8">4 Global Partners</span>
-                      </div>
-                      <div className="row g-3 mb-3">
-                        <div className="col-md-6">
-                          <div className="p-3 border rounded-3 bg-white">
-                            <span className="badge bg-primary-subtle text-primary mb-2">GERMANY</span>
-                            <h6 className="fw-bold">Technical University of Munich</h6>
-                            <p className="text-muted fs-8 mb-2">Target Program: M.Sc Informatics (Winter Intake)</p>
-                            <span className="text-success fs-8 fw-semibold"><i className="bi bi-check2-circle me-1"></i> Application Verified</span>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="p-3 border rounded-3 bg-white">
-                            <span className="badge bg-purple-subtle text-purple mb-2">UNITED STATES</span>
-                            <h6 className="fw-bold">Northeastern University, Boston</h6>
-                            <p className="text-muted fs-8 mb-2">Target Program: MS in Computer Science (Fall Intake)</p>
-                            <span className="text-warning fs-8 fw-semibold"><i className="bi bi-clock-history me-1"></i> Document Review Stage</span>
-                          </div>
-                        </div>
-                      </div>
-                      <h6 className="fw-bold mb-3">Language & Visa status tracker</h6>
-                      <div className="p-3 border rounded-3 bg-light-subtle d-flex justify-content-between">
-                        <div>
-                          <span className="text-muted fs-8 d-block">IELTS Mock Score</span>
-                          <span className="fw-bold text-dark">7.5 Band (Passed)</span>
-                        </div>
-                        <div>
-                          <span className="text-muted fs-8 d-block">WES Evaluation</span>
-                          <span className="fw-bold text-success">Submitted</span>
-                        </div>
-                        <div>
-                          <span className="text-muted fs-8 d-block">Visa Appointment</span>
-                          <span className="fw-bold text-primary">Scheduled July 10</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeRole === 'admin' && (
-                    <div>
-                      <h6 className="fw-bold mb-4">Global Administration Panel</h6>
-                      <div className="row g-3 mb-4 text-center">
-                        <div className="col-6 col-md-3">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">TOTAL COHORTS</span>
-                            <span className="fw-bold text-dark fs-4">24 Active</span>
-                          </div>
-                        </div>
-                        <div className="col-6 col-md-3">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">TEACHING STAFF</span>
-                            <span className="fw-bold text-dark fs-4">18 Trainers</span>
-                          </div>
-                        </div>
-                        <div className="col-6 col-md-3">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">SYSTEM AVAILABILITY</span>
-                            <span className="fw-bold text-success fs-4">99.98%</span>
-                          </div>
-                        </div>
-                        <div className="col-6 col-md-3">
-                          <div className="p-3 border rounded-3 bg-light">
-                            <span className="text-muted fs-8 d-block mb-1">API REQUESTS</span>
-                            <span className="fw-bold text-primary fs-4">42K/hr</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card border-0 p-3 bg-dark text-white rounded-3">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                          <span className="text-success fs-8 fw-semibold"><i className="bi bi-terminal-fill me-2"></i> System Activity Logs</span>
-                          <span className="badge bg-secondary fs-9">Real-time</span>
-                        </div>
-                        <pre className="mb-0 fs-8 text-white-50 overflow-hidden" style={{ maxHeight: '70px', fontFamily: 'monospace' }}>
-                          [14:32:01] AUTH: Student SID_998 token refresh success<br />
-                          [14:32:05] INTEGRATION: Automated Github pull for SV998 - OK<br />
-                          [14:32:11] AI: Injected ATS suggestions for 14 candidates
-                        </pre>
-                      </div>
-                    </div>
-                  )}
-
-                </div>
-              </div>
+              </ScrollReveal>
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* 8. AI POWER SECTION (DARK HIGHLIGHT SECTION) */}
+      {/* 8. AI CENTER */}
       <section id="ai" className="section-padding bg-gradient-ai text-white position-relative overflow-hidden">
-        {/* Glowing Blobs */}
         <div className="glow-blob glow-blue"></div>
         <div className="glow-blob glow-purple"></div>
 
         <div className="container position-relative z-2">
           <div className="row align-items-center gy-5">
+            
             <div className="col-lg-5 text-start">
-              <span className="badge bg-purple text-white mb-2 fs-7 px-3 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5">
-                <Sparkles size={14} /> AI Engine Core
-              </span>
-              <h2 className="display-5 fw-extrabold mb-3">The AI-Powered Career Engine</h2>
-              <p className="text-white-50 mb-4 fs-6">
-                Explore the automated features designed to support students and institutions around the clock. Click the options below to interactively test our AI.
-              </p>
+              <ScrollReveal direction="left">
+                <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-20 mb-2 fs-7 px-3 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5" style={{ color: 'var(--accent-teal)' }}>
+                  <Sparkles size={14} style={{ color: 'var(--accent-teal)' }} /> AI Engine Core
+                </span>
+                <h2 className="display-5 fw-extrabold mb-3 text-white">Continuous Intelligence</h2>
+                <p className="text-secondary mb-4 fs-6">
+                  Experience how our algorithms support students 24/7. Click a tool below to run our AI sandbox simulator.
+                </p>
+              </ScrollReveal>
 
               <div className="row g-3">
                 <div className="col-sm-6">
-                  <div 
-                    onClick={() => triggerAiResponse('advisor')}
-                    className={`ai-highlight-card h-100 style-selector cursor-pointer ${aiModule === 'advisor' ? 'border-primary' : ''}`}
-                    style={{ cursor: 'pointer', border: aiModule === 'advisor' ? '1px solid #a855f7' : '1px solid rgba(255,255,255,0.08)' }}
-                  >
-                    <div className="text-purple mb-2"><Cpu size={24} /></div>
-                    <h5 className="fw-bold fs-7 mb-1 text-white">AI Career Advisor</h5>
-                    <span className="text-white-50 fs-9">Roadmaps & suggestions</span>
-                  </div>
+                  <ScrollReveal direction="up" delay={100}>
+                    <div 
+                      onClick={() => triggerAiResponse('advisor')}
+                      className={`ai-interactive-panel h-100 ${aiModule === 'advisor' ? 'active' : ''}`}
+                    >
+                      <div className="text-purple mb-2"><Cpu size={24} style={{ color: 'var(--accent-2)' }} /></div>
+                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Career Advisor</h5>
+                      <span className="text-secondary fs-9">Suggested roadmaps & tracks</span>
+                    </div>
+                  </ScrollReveal>
                 </div>
 
                 <div className="col-sm-6">
-                  <div 
-                    onClick={() => triggerAiResponse('scheduler')}
-                    className={`ai-highlight-card h-100 style-selector cursor-pointer ${aiModule === 'scheduler' ? 'border-primary' : ''}`}
-                    style={{ cursor: 'pointer', border: aiModule === 'scheduler' ? '1px solid #a855f7' : '1px solid rgba(255,255,255,0.08)' }}
-                  >
-                    <div className="text-purple mb-2"><Calendar size={24} /></div>
-                    <h5 className="fw-bold fs-7 mb-1 text-white">AI Scheduler</h5>
-                    <span className="text-white-50 fs-9">Automated timetable updates</span>
-                  </div>
+                  <ScrollReveal direction="up" delay={150}>
+                    <div 
+                      onClick={() => triggerAiResponse('scheduler')}
+                      className={`ai-interactive-panel h-100 ${aiModule === 'scheduler' ? 'active' : ''}`}
+                    >
+                      <div className="text-purple mb-2"><Calendar size={24} style={{ color: 'var(--accent-teal)' }} /></div>
+                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Scheduler</h5>
+                      <span className="text-secondary fs-9">Automated timetable updates</span>
+                    </div>
+                  </ScrollReveal>
                 </div>
 
                 <div className="col-sm-6">
-                  <div 
-                    onClick={() => triggerAiResponse('doubt')}
-                    className={`ai-highlight-card h-100 style-selector cursor-pointer ${aiModule === 'doubt' ? 'border-primary' : ''}`}
-                    style={{ cursor: 'pointer', border: aiModule === 'doubt' ? '1px solid #a855f7' : '1px solid rgba(255,255,255,0.08)' }}
-                  >
-                    <div className="text-purple mb-2"><MessageSquare size={24} /></div>
-                    <h5 className="fw-bold fs-7 mb-1 text-white">AI Doubt Assistant</h5>
-                    <span className="text-white-50 fs-9">24/7 technical answers</span>
-                  </div>
+                  <ScrollReveal direction="up" delay={200}>
+                    <div 
+                      onClick={() => triggerAiResponse('doubt')}
+                      className={`ai-interactive-panel h-100 ${aiModule === 'doubt' ? 'active' : ''}`}
+                    >
+                      <div className="text-purple mb-2"><MessageSquare size={24} style={{ color: 'var(--accent-1)' }} /></div>
+                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Doubt Assistant</h5>
+                      <span className="text-secondary fs-9">24/7 technical answers</span>
+                    </div>
+                  </ScrollReveal>
                 </div>
 
                 <div className="col-sm-6">
-                  <div 
-                    onClick={() => triggerAiResponse('resume')}
-                    className={`ai-highlight-card h-100 style-selector cursor-pointer ${aiModule === 'resume' ? 'border-primary' : ''}`}
-                    style={{ cursor: 'pointer', border: aiModule === 'resume' ? '1px solid #a855f7' : '1px solid rgba(255,255,255,0.08)' }}
-                  >
-                    <div className="text-purple mb-2"><FileText size={24} /></div>
-                    <h5 className="fw-bold fs-7 mb-1 text-white">AI Resume Builder</h5>
-                    <span className="text-white-50 fs-9">Instant ATS optimization</span>
-                  </div>
+                  <ScrollReveal direction="up" delay={250}>
+                    <div 
+                      onClick={() => triggerAiResponse('resume')}
+                      className={`ai-interactive-panel h-100 ${aiModule === 'resume' ? 'active' : ''}`}
+                    >
+                      <div className="text-purple mb-2"><FileText size={24} style={{ color: 'var(--accent-2)' }} /></div>
+                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Resume Optimizer</h5>
+                      <span className="text-secondary fs-9">Instant ATS suggestions</span>
+                    </div>
+                  </ScrollReveal>
                 </div>
               </div>
             </div>
 
-            {/* AI Playground Output */}
+            {/* AI Output screen */}
             <div className="col-lg-7">
-              <div className="card bg-dark border-secondary rounded-4 shadow-lg p-4 text-start">
-                <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary mb-3">
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="bg-gradient-soft border d-flex align-items-center justify-content-center" style={{ width: '30px', height: '30px', borderRadius: '7px' }}>
-                      <i className="bi bi-cpu text-gradient fs-6"></i>
-                    </span>
-                    <span className="fw-bold text-white fs-7">Interactive AI Sandbox</span>
-                  </div>
-                  <div className="d-flex align-items-center gap-2">
-                    <span className="badge bg-secondary-subtle text-secondary fs-8">Model: Career-GPT-v4</span>
-                  </div>
-                </div>
-
-                {/* Prompt display */}
-                <div className="mb-4">
-                  <label className="text-white-50 fs-8 fw-semibold mb-1.5 uppercase">Simulated User Input Prompt</label>
-                  <div className="p-3 rounded-3 bg-secondary bg-opacity-25 border border-secondary text-white-50 fs-7">
-                    {aiPrompt}
-                  </div>
-                </div>
-
-                {/* Response display */}
-                <div>
-                  <label className="text-white-50 fs-8 fw-semibold mb-1.5 uppercase">AI Sandbox Output Response</label>
-                  <div className="p-3 rounded-3 bg-black bg-opacity-40 border border-secondary text-white fs-7 min-h-150 position-relative" style={{ minHeight: '220px', fontFamily: 'monospace' }}>
-                    {isAiLoading ? (
-                      <div className="position-absolute top-50 start-50 translate-middle text-center">
-                        <div className="spinner-border text-primary" role="status" style={{ width: '2rem', height: '2rem' }}>
-                          <span className="visually-hidden">Loading...</span>
-                        </div>
-                        <span className="d-block mt-2 text-white-50 fs-8">Analyzing parameters...</span>
-                      </div>
-                    ) : (
-                      <span style={{ whiteSpace: 'pre-line' }}>{aiResponse}</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-3 text-end">
-                  <span className="text-white-50 fs-8">Click another module on the left to request another query response.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. DASHBOARD PREVIEW (UI SHOWCASE) */}
-      <section className="section-padding bg-white">
-        <div className="container">
-          <div className="text-center mb-5 pb-3">
-            <span className="role-badge mb-2 d-inline-block">Product Tour</span>
-            <h2 className="display-5 fw-extrabold text-gradient mb-3">Enterprise Dashboards Showcase</h2>
-            <p className="lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-              A peek inside the operational analytics panels used by university management and student career officers.
-            </p>
-          </div>
-
-          <div className="row g-4">
-            {/* Mock Card 1 */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border rounded-4 shadow-sm p-4 bg-light text-start h-100">
-                <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-                  <h6 className="fw-extrabold text-dark mb-0 d-flex align-items-center gap-2">
-                    <TrendingUp size={16} className="text-primary" /> Analytics Center
-                  </h6>
-                  <span className="badge bg-primary-subtle text-primary fs-8">Monthly</span>
-                </div>
-                <h3 className="fw-bold mb-2">91.4%</h3>
-                <span className="text-success fs-7 fw-bold d-block mb-3">
-                  <i className="bi bi-arrow-up-right me-1"></i> +8.2% vs last semester placements
-                </span>
-                <div className="p-3 border bg-white rounded-3">
-                  <div className="d-flex justify-content-between fs-8 text-muted mb-2">
-                    <span>Highest Salary Package</span>
-                    <span className="fw-bold text-dark">42.5 LPA</span>
-                  </div>
-                  <div className="d-flex justify-content-between fs-8 text-muted">
-                    <span>Average Package</span>
-                    <span className="fw-bold text-dark">8.7 LPA</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Mock Card 2 */}
-            <div className="col-lg-4 col-md-6">
-              <div className="card border rounded-4 shadow-sm p-4 bg-light text-start h-100">
-                <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-                  <h6 className="fw-extrabold text-dark mb-0 d-flex align-items-center gap-2">
-                    <Users size={16} className="text-primary" /> Cohorts Distribution
-                  </h6>
-                  <span className="badge bg-purple-subtle text-purple fs-8">14 Cohorts</span>
-                </div>
-                <h3 className="fw-bold mb-2">1,240</h3>
-                <span className="text-muted fs-7 d-block mb-3">Total registered active learners</span>
-                <div className="p-3 border bg-white rounded-3">
-                  <div className="mb-2">
-                    <div className="d-flex justify-content-between fs-8 text-muted mb-1">
-                      <span>Software Engineering</span>
-                      <span className="fw-bold text-dark">620</span>
+              <ScrollReveal direction="right" delay={150}>
+                <div className="card bg-dark border-secondary border-opacity-30 rounded-4 shadow-lg p-4 text-start">
+                  
+                  <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary border-opacity-20 mb-3">
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="bg-secondary bg-opacity-10 border border-secondary border-opacity-35 d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px', borderRadius: '8px' }}>
+                        <i className="bi bi-cpu text-gradient fs-6"></i>
+                      </span>
+                      <span className="fw-bold text-white fs-7">Interactive AI Sandbox</span>
                     </div>
-                    <div className="progress" style={{ height: '4px' }}>
-                      <div className="progress-bar bg-primary" style={{ width: '50%' }}></div>
+                    <div className="d-flex align-items-center gap-2">
+                      <span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-20 fs-8">Model: CareerOS-GPT-v4</span>
                     </div>
                   </div>
+
+                  {/* Input display */}
+                  <div className="mb-4">
+                    <label className="text-secondary fs-8 fw-semibold mb-1.5 uppercase d-block">Prompt request</label>
+                    <div className="p-3 rounded-3 bg-secondary bg-opacity-10 border border-secondary border-opacity-20 text-secondary fs-7">
+                      {aiPrompt}
+                    </div>
+                  </div>
+
+                  {/* Sandbox answer text */}
                   <div>
-                    <div className="d-flex justify-content-between fs-8 text-muted mb-1">
-                      <span>Design & Product</span>
-                      <span className="fw-bold text-dark">440</span>
-                    </div>
-                    <div className="progress" style={{ height: '4px' }}>
-                      <div className="progress-bar bg-purple" style={{ width: '35%' }}></div>
+                    <label className="text-secondary fs-8 fw-semibold mb-1.5 uppercase d-block">AI response output</label>
+                    <div className="p-3.5 rounded-3 bg-black bg-opacity-40 border border-secondary border-opacity-20 text-white fs-7 min-h-150 position-relative" style={{ minHeight: '220px', fontFamily: 'monospace' }}>
+                      {isAiLoading ? (
+                        <div className="position-absolute top-50 start-50 translate-middle text-center">
+                          <div className="mb-2">
+                            <span className="typing-dot"></span>
+                            <span className="typing-dot"></span>
+                            <span className="typing-dot"></span>
+                          </div>
+                          <span className="d-block text-muted fs-8">Compiling parameters...</span>
+                        </div>
+                      ) : (
+                        <span style={{ whiteSpace: 'pre-line' }}>{aiResponse}</span>
+                      )}
                     </div>
                   </div>
+
+                  <div className="mt-3 text-end d-flex align-items-center justify-content-between">
+                    <span className="text-muted fs-9 d-flex align-items-center gap-1.5"><HelpCircle size={12} /> Click a different card to see other outputs.</span>
+                    <span className="text-muted fs-9">Token Sync: OK</span>
+                  </div>
+
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* Mock Card 3 */}
-            <div className="col-lg-4 col-md-12">
-              <div className="card border rounded-4 shadow-sm p-4 bg-light text-start h-100">
-                <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-                  <h6 className="fw-extrabold text-dark mb-0 d-flex align-items-center gap-2">
-                    <Award size={16} className="text-primary" /> Top Recruiter Activity
-                  </h6>
-                  <span className="badge bg-success-subtle text-success fs-8">Active</span>
-                </div>
-                <h3 className="fw-bold mb-2">28</h3>
-                <span className="text-muted fs-7 d-block mb-3">Recruiters scheduling interviews this week</span>
-                <div className="p-3 border bg-white rounded-3">
-                  <div className="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-light">
-                    <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-8" style={{ width: '24px', height: '24px', fontSize: '0.65rem' }}>AZ</div>
-                    <span className="fs-8 text-muted">Amazon India — <strong>14 shortlist candidates</strong></span>
-                  </div>
-                  <div className="d-flex align-items-center gap-2">
-                    <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fs-8" style={{ width: '24px', height: '24px', fontSize: '0.65rem' }}>MS</div>
-                    <span className="fs-8 text-muted">Microsoft — <strong>8 shortlist candidates</strong></span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 10. TESTIMONIALS */}
-      <section id="testimonials" className="section-padding bg-light-subtle">
+      {/* 9. DASHBOARD PREVIEW */}
+      <section className="section-padding bg-dark bg-opacity-10">
         <div className="container">
+          
           <div className="text-center mb-5 pb-3">
-            <span className="role-badge mb-2 d-inline-block">Success Stories</span>
-            <h2 className="display-5 fw-extrabold text-gradient mb-3">What Our Ecosystem Users Say</h2>
-            <p className="lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-              Read the direct experiences of students, corporate recruiters, and university coordinators using Opulent Vidya CareerOS.
-            </p>
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">System Tour</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">Enterprise Dashboards Showcase</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                A peek inside the operational analytics panels used by university management and student career officers.
+              </p>
+            </ScrollReveal>
           </div>
 
           <div className="row g-4">
             {/* Card 1 */}
             <div className="col-lg-4 col-md-6">
-              <div className="testimonial-card text-start h-100 d-flex flex-column justify-content-between">
-                <div>
-                  <span className="testimonial-quote-icon">“</span>
-                  <div className="text-warning mb-3">
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                  </div>
-                  <p className="text-muted fs-7 mb-4">
-                    "Using the AI Resume builder and synced portfolio pipelines, I secured a backend engineering internship at Microsoft within 3 months. Having study logs, class recordings, and my resume compiler in one app was incredibly convenient."
-                  </p>
-                </div>
-                <div className="d-flex align-items-center gap-3">
-                  <div className="avatar-wrapper">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Student" />
-                  </div>
+              <ScrollReveal direction="up" delay={100} className="h-100">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
                   <div>
-                    <h6 className="fw-bold mb-0">Divya Nair</h6>
-                    <span className="text-muted fs-8">Student placed at Microsoft</span>
+                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-30">
+                      <h6 className="fw-extrabold text-white mb-0 d-flex align-items-center gap-2">
+                        <TrendingUp size={16} className="text-primary" /> Placements Rate
+                      </h6>
+                      <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-20 fs-8">Monthly</span>
+                    </div>
+                    <h3 className="fw-extrabold text-white mb-1">91.4%</h3>
+                    <span className="text-success fs-8 fw-bold d-block mb-3.5">
+                      <i className="bi bi-arrow-up-right me-1"></i> +8.2% vs last semester
+                    </span>
+                  </div>
+                  <div className="p-3 border border-secondary border-opacity-20 bg-dark bg-opacity-40 rounded-3">
+                    <div className="d-flex justify-content-between fs-8 text-muted mb-2">
+                      <span>Highest Package Offered</span>
+                      <span className="fw-bold text-white">42.5 LPA</span>
+                    </div>
+                    <div className="d-flex justify-content-between fs-8 text-muted">
+                      <span>Average Cohort Package</span>
+                      <span className="fw-bold text-white">8.7 LPA</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
 
             {/* Card 2 */}
             <div className="col-lg-4 col-md-6">
-              <div className="testimonial-card text-start h-100 d-flex flex-column justify-content-between">
-                <div>
-                  <span className="testimonial-quote-icon">“</span>
-                  <div className="text-warning mb-3">
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                  </div>
-                  <p className="text-muted fs-7 mb-4">
-                    "Finding top-tier candidates usually takes weeks of reading PDFs. With the CareerOS Recruiter dashboard, we search by verified projects and filter for ready-to-join coders immediately. Hire conversion rates increased by 4x."
-                  </p>
-                </div>
-                <div className="d-flex align-items-center gap-3">
-                  <div className="avatar-wrapper">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" alt="Recruiter" />
-                  </div>
+              <ScrollReveal direction="up" delay={200} className="h-100">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
                   <div>
-                    <h6 className="fw-bold mb-0">Rohan Malhotra</h6>
-                    <span className="text-muted fs-8">Hiring Lead at Google Cloud</span>
+                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-30">
+                      <h6 className="fw-extrabold text-white mb-0 d-flex align-items-center gap-2">
+                        <Users size={16} className="text-primary" /> Active Cohorts
+                      </h6>
+                      <span className="badge bg-purple bg-opacity-10 text-purple border border-purple border-opacity-20 fs-8">14 Cohorts</span>
+                    </div>
+                    <h3 className="fw-extrabold text-white mb-1">1,240</h3>
+                    <span className="text-muted fs-8 d-block mb-3.5">Total registered active learners</span>
+                  </div>
+                  <div className="p-3 border border-secondary border-opacity-20 bg-dark bg-opacity-40 rounded-3">
+                    <div className="mb-2">
+                      <div className="d-flex justify-content-between fs-8 text-muted mb-1">
+                        <span>Software Engineering</span>
+                        <span className="fw-bold text-white">620</span>
+                      </div>
+                      <div className="progress" style={{ height: '4px', backgroundColor: '#1e293b' }}>
+                        <div className="progress-bar bg-primary" style={{ width: '50%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="d-flex justify-content-between fs-8 text-muted mb-1">
+                        <span>Design & Product</span>
+                        <span className="fw-bold text-white">440</span>
+                      </div>
+                      <div className="progress" style={{ height: '4px', backgroundColor: '#1e293b' }}>
+                        <div className="progress-bar bg-purple" style={{ width: '35%' }}></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
 
             {/* Card 3 */}
             <div className="col-lg-4 col-md-12">
-              <div className="testimonial-card text-start h-100 d-flex flex-column justify-content-between">
-                <div>
-                  <span className="testimonial-quote-icon">“</span>
-                  <div className="text-warning mb-3">
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                    <Star size={16} fill="currentColor" className="me-1" />
-                  </div>
-                  <p className="text-muted fs-7 mb-4">
-                    "We migrated our college student management to CareerOS. The platform provides full visibility over cohort assignments, grades, visa applications, and student placement ready states in real-time."
-                  </p>
-                </div>
-                <div className="d-flex align-items-center gap-3">
-                  <div className="avatar-wrapper">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100&h=100" alt="Trainer" />
-                  </div>
+              <ScrollReveal direction="up" delay={300} className="h-100">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
                   <div>
-                    <h6 className="fw-bold mb-0">Dr. Amit Varma</h6>
-                    <span className="text-muted fs-8">Dean, Career Pathways Academy</span>
+                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-30">
+                      <h6 className="fw-extrabold text-white mb-0 d-flex align-items-center gap-2">
+                        <Award size={16} className="text-primary" /> Recruiter Pipeline
+                      </h6>
+                      <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 fs-8">Weekly</span>
+                    </div>
+                    <h3 className="fw-extrabold text-white mb-1">28</h3>
+                    <span className="text-muted fs-8 d-block mb-3.5">Recruiters scheduling interviews this week</span>
+                  </div>
+                  <div className="p-3 border border-secondary border-opacity-20 bg-dark bg-opacity-40 rounded-3">
+                    <div className="d-flex align-items-center gap-2.5 mb-2 pb-2 border-bottom border-secondary border-opacity-30">
+                      <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-8 fw-bold" style={{ width: '24px', height: '24px' }}>AZ</div>
+                      <span className="fs-8 text-muted">Amazon India — <strong>14 shortcut invites</strong></span>
+                    </div>
+                    <div className="d-flex align-items-center gap-2.5">
+                      <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fs-8 fw-bold" style={{ width: '24px', height: '24px' }}>MS</div>
+                      <span className="fs-8 text-muted">Microsoft — <strong>8 shortlist placements</strong></span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
+
+        </div>
+      </section>
+
+      {/* 10. TESTIMONIALS */}
+      <section id="testimonials" className="section-padding bg-dark bg-opacity-40">
+        <div className="container">
+          
+          <div className="text-center mb-5 pb-3">
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">Ecosystem Outcomes</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">What Our Users Experience</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                Read reviews from students, corporate recruiters, and university coordinators using Opulent Vidya CareerOS.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <div className="row g-4">
+            {/* Card 1 */}
+            <div className="col-lg-4 col-md-6">
+              <ScrollReveal direction="up" delay={100} className="h-100">
+                <div className="testimonial-card-dark text-start h-100 d-flex flex-column justify-content-between">
+                  <div>
+                    <span className="testimonial-quote-icon">“</span>
+                    <div className="text-warning mb-3">
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                    </div>
+                    <p className="text-secondary fs-7 mb-4">
+                      "Using the AI Resume builder and synced portfolio pipelines, I secured a backend engineering internship at Microsoft within 3 months. Having study logs, class recordings, and my resume compiler in one app was incredibly convenient."
+                    </p>
+                  </div>
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="avatar-wrapper">
+                      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Student" />
+                    </div>
+                    <div>
+                      <h6 className="fw-extrabold mb-0 fs-6 text-white">Divya Nair</h6>
+                      <span className="text-muted fs-8">Student placed at Microsoft</span>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Card 2 */}
+            <div className="col-lg-4 col-md-6">
+              <ScrollReveal direction="up" delay={200} className="h-100">
+                <div className="testimonial-card-dark text-start h-100 d-flex flex-column justify-content-between">
+                  <div>
+                    <span className="testimonial-quote-icon">“</span>
+                    <div className="text-warning mb-3">
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                    </div>
+                    <p className="text-secondary fs-7 mb-4">
+                      "Finding top-tier candidates usually takes weeks of reading PDFs. With the CareerOS Recruiter dashboard, we search by verified projects and filter for ready-to-join coders immediately. Hire conversion rates increased by 4x."
+                    </p>
+                  </div>
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="avatar-wrapper">
+                      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" alt="Recruiter" />
+                    </div>
+                    <div>
+                      <h6 className="fw-extrabold mb-0 fs-6 text-white">Rohan Malhotra</h6>
+                      <span className="text-muted fs-8">Hiring Lead at Google Cloud</span>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+
+            {/* Card 3 */}
+            <div className="col-lg-4 col-md-12">
+              <ScrollReveal direction="up" delay={300} className="h-100">
+                <div className="testimonial-card-dark text-start h-100 d-flex flex-column justify-content-between">
+                  <div>
+                    <span className="testimonial-quote-icon">“</span>
+                    <div className="text-warning mb-3">
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                      <Star size={16} fill="currentColor" className="me-1" />
+                    </div>
+                    <p className="text-secondary fs-7 mb-4">
+                      "We migrated our college student management to CareerOS. The platform provides full visibility over cohort assignments, grades, visa applications, and student placement ready states in real-time."
+                    </p>
+                  </div>
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="avatar-wrapper">
+                      <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100&h=100" alt="Trainer" />
+                    </div>
+                    <div>
+                      <h6 className="fw-extrabold mb-0 fs-6 text-white">Dr. Amit Varma</h6>
+                      <span className="text-muted fs-8">Dean, Career Pathways Academy</span>
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* FAQ SECTION */}
+      <section id="faq" className="section-padding bg-dark bg-opacity-20">
+        <div className="container">
+          
+          <div className="text-center mb-5 pb-3">
+            <ScrollReveal direction="up">
+              <span className="role-badge mb-2 d-inline-block">Common Inquiries</span>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={100}>
+              <h2 className="display-5 fw-extrabold text-gradient mb-3">Frequently Asked Questions</h2>
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={200}>
+              <p className="lead text-secondary mx-auto" style={{ maxWidth: '680px' }}>
+                Have questions about integrations, setup timescales, or student tracking capabilities? Browse our answers below.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <div className="row justify-content-center">
+            <div className="col-lg-8 text-start">
+              <ScrollReveal direction="up" delay={150}>
+                
+                <div className={`faq-item-dark ${activeFaq === 0 ? 'active' : ''}`}>
+                  <div className="faq-header" onClick={() => toggleFaq(0)}>
+                    <h5>How does CareerOS verify student project portfolios?</h5>
+                    <ChevronDown size={18} className="faq-icon" />
+                  </div>
+                  <div className="faq-body">
+                    CareerOS links directly to the student's GitHub account. It fetches repository logs, commits histories, and pull requests. AI algorithms inspect code configurations and compare functions against plagiarism benchmarks, generating a verified project badge for the recruiter database.
+                  </div>
+                </div>
+
+                <div className={`faq-item-dark ${activeFaq === 1 ? 'active' : ''}`}>
+                  <div className="faq-header" onClick={() => toggleFaq(1)}>
+                    <h5>Can we sync CareerOS with our current Canvas or Moodle LMS?</h5>
+                    <ChevronDown size={18} className="faq-icon" />
+                  </div>
+                  <div className="faq-body">
+                    Yes. CareerOS features LTI integration standards. This allows seamless synchronization of grades, cohort calendars, and attendance statistics from systems like Moodle, Canvas, or Blackboard.
+                  </div>
+                </div>
+
+                <div className={`faq-item-dark ${activeFaq === 2 ? 'active' : ''}`}>
+                  <div className="faq-header" onClick={() => toggleFaq(2)}>
+                    <h5>How does the Study Abroad module assist with visas?</h5>
+                    <ChevronDown size={18} className="faq-icon" />
+                  </div>
+                  <div className="faq-body">
+                    The Study Abroad dashboard holds program catalog workflows for over 400 universities. It automatically generates check-lists for passport and funding records, tracks recommendation letters, and provides mock visa appointment questions.
+                  </div>
+                </div>
+
+                <div className={`faq-item-dark ${activeFaq === 3 ? 'active' : ''}`}>
+                  <div className="faq-header" onClick={() => toggleFaq(3)}>
+                    <h5>What pricing tiers are available for universities?</h5>
+                    <ChevronDown size={18} className="faq-icon" />
+                  </div>
+                  <div className="faq-body">
+                    We offer customized institutional SaaS agreements based on cohort sizes. Basic setups cover the core LMS, assignments tracker, and verified portfolio systems. Enterprise plans add the automated recruiter pipeline, AI resume optimizer, and study abroad pathways.
+                  </div>
+                </div>
+
+              </ScrollReveal>
+            </div>
+          </div>
+
         </div>
       </section>
 
       {/* 11. CALL TO ACTION */}
-      <section id="cta" className="section-padding bg-white">
+      <section id="cta" className="section-padding bg-dark bg-opacity-40">
         <div className="container">
-          <div className="card border-0 rounded-5 p-5 bg-gradient-ai text-white position-relative overflow-hidden text-center shadow-lg">
-            {/* Glow blobs inside card */}
-            <div className="glow-blob glow-blue" style={{ top: '-10%', left: '-10%', width: '200px', height: '200px' }}></div>
-            <div className="glow-blob glow-purple" style={{ bottom: '-10%', right: '-10%', width: '200px', height: '200px' }}></div>
+          <ScrollReveal direction="fade">
+            <div 
+              className="card border-0 rounded-5 p-5 position-relative overflow-hidden text-center shadow-lg"
+              style={{
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(99, 102, 241, 0.15) 100%)',
+                border: '1px solid rgba(99, 102, 241, 0.3) !important'
+              }}
+            >
+              <div className="glow-blob glow-blue" style={{ top: '-10%', left: '-10%', width: '250px', height: '250px' }}></div>
+              <div className="glow-blob glow-purple" style={{ bottom: '-10%', right: '-10%', width: '250px', height: '250px' }}></div>
 
-            <div className="position-relative z-2 py-4">
-              <span className="badge bg-white text-primary fw-extrabold mb-3 text-uppercase fs-8 py-1.5 px-3 rounded-5">
-                Join Today
-              </span>
-              <h2 className="display-4 fw-extrabold mb-3 text-white">Start Your Career Journey Today</h2>
-              <p className="lead text-white-50 mx-auto mb-4.5" style={{ maxWidth: '620px', fontSize: '1.1rem' }}>
-                Join over 10,000+ students, 200+ recruiters, and leading academic institutions. Get started now to transform your learning into high-tier placements.
-              </p>
+              <div className="position-relative z-2 py-4">
+                <span className="badge bg-secondary bg-opacity-20 text-white border border-secondary border-opacity-30 fw-extrabold mb-3 text-uppercase fs-8 py-1.5 px-3 rounded-5">
+                  Secure Access
+                </span>
+                <h2 className="display-4 fw-extrabold mb-3 text-white">Start Your Career Journey Today</h2>
+                <p className="lead text-secondary mx-auto mb-5" style={{ maxWidth: '620px', fontSize: '1.1rem' }}>
+                  Join over 10,000+ students, 200+ recruiters, and leading academic institutions. Get started now to transform your learning into high-tier placements.
+                </p>
 
-              <div className="d-flex flex-wrap justify-content-center gap-3 mt-4 pt-2">
-                <button 
-                  onClick={() => alert('Welcome to Opulent Vidya CareerOS! Initializing Student onboarding flow...')}
-                  className="btn btn-light text-primary fw-extrabold px-4 py-3 rounded-pill d-inline-flex align-items-center gap-2"
-                  style={{ boxShadow: '0 4px 15px rgba(255, 255, 255, 0.25)' }}
-                >
-                  <span>Join as Student</span>
-                  <ArrowUpRight size={18} />
-                </button>
-                <button 
-                  onClick={() => alert('Thank you for booking a demo. Our partnership team will contact you in the next 12 hours.')}
-                  className="btn btn-outline-light fw-bold px-4 py-3 rounded-pill"
-                >
-                  Book a Demo
-                </button>
+                <div className="d-flex flex-wrap justify-content-center gap-3">
+                  <button 
+                    onClick={() => alert('Welcome to Opulent Vidya CareerOS! Initializing onboarding...')}
+                    className="btn btn-primary-gradient px-4.5 py-3 rounded-pill d-inline-flex align-items-center gap-2"
+                  >
+                    <span>Join as Student</span>
+                    <ArrowUpRight size={18} />
+                  </button>
+                  <button 
+                    onClick={() => alert('Booking coordinator contacted.')}
+                    className="btn btn-secondary-outline fw-bold px-4.5 py-3 rounded-pill"
+                  >
+                    Book institutional Demo
+                  </button>
+                </div>
               </div>
+
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* 12. FOOTER */}
-      <footer className="bg-dark text-white pt-5 pb-4 border-top border-secondary border-opacity-25">
+      <footer className="bg-dark text-white pt-5 pb-4 border-top border-secondary border-opacity-15">
         <div className="container">
           <div className="row g-4 text-start mb-5">
-            {/* Column 1: Info */}
+            {/* Col 1 */}
             <div className="col-lg-4 col-md-6">
               <a className="navbar-brand d-inline-flex align-items-center mb-3 text-white" href="#hero">
-                <span className="bg-primary-subtle text-primary border d-flex align-items-center justify-content-center me-2" style={{ width: '35px', height: '35px', borderRadius: '8px' }}>
-                  <i className="bi bi-rocket-takeoff-fill" style={{ fontSize: '1rem' }}></i>
+                <span className="bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 d-flex align-items-center justify-content-center me-2" style={{ width: '35px', height: '35px', borderRadius: '8px' }}>
+                  <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1rem' }}></i>
                 </span>
                 <span className="fw-extrabold fs-5 text-gradient">CareerOS</span>
               </a>
-              <p className="text-white-50 fs-7 mb-4" style={{ maxWidth: '300px' }}>
+              <p className="text-secondary fs-7 mb-4" style={{ maxWidth: '300px' }}>
                 Opulent Vidya CareerOS is the premium student lifecycle infrastructure driving next-gen placement rate optimization.
               </p>
               <div className="d-flex gap-3 fs-5">
-                <a href="#" className="text-white-50 hover-text-white"><i className="bi bi-twitter"></i></a>
-                <a href="#" className="text-white-50 hover-text-white"><i className="bi bi-github"></i></a>
-                <a href="#" className="text-white-50 hover-text-white"><i className="bi bi-linkedin"></i></a>
-                <a href="#" className="text-white-50 hover-text-white"><i className="bi bi-youtube"></i></a>
+                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-twitter"></i></a>
+                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-github"></i></a>
+                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-linkedin"></i></a>
+                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-youtube"></i></a>
               </div>
             </div>
 
-            {/* Column 2: Links Product */}
+            {/* Col 2 */}
             <div className="col-lg-2 col-md-6 col-6">
-              <h6 className="fw-bold mb-3 fs-7 uppercase text-white-50">Platform</h6>
+              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Platform</h6>
               <ul className="list-unstyled fs-7">
-                <li className="mb-2.5"><a href="#features" className="text-white-50 text-decoration-none hover-text-white">Smart LMS</a></li>
-                <li className="mb-2.5"><a href="#features" className="text-white-50 text-decoration-none hover-text-white">GitHub Portfolios</a></li>
-                <li className="mb-2.5"><a href="#features" className="text-white-50 text-decoration-none hover-text-white">ATS Resumes</a></li>
-                <li className="mb-2.5"><a href="#dashboards" className="text-white-50 text-decoration-none hover-text-white">Partner Portals</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-white">Smart LMS</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-white">GitHub Portfolios</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-white">ATS Resumes</a></li>
+                <li className="mb-2.5"><a href="#dashboards" className="text-secondary text-decoration-none hover-text-white">Partner Portals</a></li>
               </ul>
             </div>
 
-            {/* Column 3: Links Resources */}
+            {/* Col 3 */}
             <div className="col-lg-2 col-md-6 col-6">
-              <h6 className="fw-bold mb-3 fs-7 uppercase text-white-50">Company</h6>
+              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Company</h6>
               <ul className="list-unstyled fs-7">
-                <li className="mb-2.5"><a href="#" className="text-white-50 text-decoration-none hover-text-white">About Us</a></li>
-                <li className="mb-2.5"><a href="#" className="text-white-50 text-decoration-none hover-text-white">Careers</a></li>
-                <li className="mb-2.5"><a href="#" className="text-white-50 text-decoration-none hover-text-white">Partner Program</a></li>
-                <li className="mb-2.5"><a href="#" className="text-white-50 text-decoration-none hover-text-white">Contact Sales</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">About Us</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">Careers</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">Partner Program</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">Contact Sales</a></li>
               </ul>
             </div>
 
-            {/* Column 4: Newsletter */}
+            {/* Col 4 */}
             <div className="col-lg-4 col-md-6">
-              <h6 className="fw-bold mb-3 fs-7 uppercase text-white-50">Newsletter SignUp</h6>
-              <p className="text-white-50 fs-7 mb-3">
+              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Newsletter SignUp</h6>
+              <p className="text-secondary fs-7 mb-3">
                 Subscribe to get latest updates about tech placements and career advice.
               </p>
               
@@ -1491,8 +1978,8 @@ In React's useEffect hook:
             </div>
           </div>
 
-          <div className="border-top border-secondary border-opacity-25 pt-4 text-center">
-            <span className="text-white-50 fs-8">
+          <div className="border-top border-secondary border-opacity-15 pt-4 text-center">
+            <span className="text-secondary fs-8">
               &copy; {new Date().getFullYear()} Opulent Vidya CareerOS. All Rights Reserved. Made with ❤️ in React & Bootstrap.
             </span>
           </div>
