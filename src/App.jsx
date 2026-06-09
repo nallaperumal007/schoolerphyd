@@ -354,7 +354,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       <nav className={`navbar navbar-expand-lg glass-navbar sticky-top py-3.5 ${isScrolled ? 'navbar-scrolled' : ''}`}>
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#hero">
-            <span className="bg-light border border-secondary-subtle d-flex align-items-center justify-content-center me-2.5" style={{ width: '42px', height: '42px', borderRadius: '12px', boxShadow: 'var(--shadow-glow)' }}>
+            <span className="bg-white border border-secondary-subtle border-opacity-30 d-flex align-items-center justify-content-center me-2.5 shadow-sm" style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.9)' }}>
               <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1.35rem' }}></i>
             </span>
             <div>
@@ -897,7 +897,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 5. CORE FEATURES */}
-      <section id="features" className="section-padding bg-light">
+      <section id="features" className="section-padding position-relative">
         <div className="container">
           <div className="text-center mb-5 pb-3">
             <ScrollReveal direction="up">
@@ -1163,7 +1163,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 6. HOW IT WORKS (FLOW SECTION WITH PARTICLE ANIMATION) */}
-      <section id="how-it-works" className="section-padding bg-light position-relative overflow-hidden">
+      <section id="how-it-works" className="section-padding position-relative overflow-hidden">
         <div className="container position-relative z-2">
           
           <div className="text-center mb-5 pb-3">
@@ -1265,7 +1265,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 7. ROLE-BASED DASHBOARD SECTION (DYNAMIC PREVIEW PANEL) */}
-      <section id="dashboards" className="section-padding bg-light">
+      <section id="dashboards" className="section-padding position-relative">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -1660,7 +1660,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 8. AI CENTER */}
-      <section id="ai" className="section-padding bg-gradient-ai text-dark position-relative overflow-hidden">
+      <section id="ai" className="section-padding text-dark position-relative overflow-hidden">
         <div className="glow-blob glow-blue"></div>
         <div className="glow-blob glow-purple"></div>
 
@@ -1791,7 +1791,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 9. DASHBOARD PREVIEW */}
-      <section className="section-padding bg-light">
+      <section id="showcase" className="section-padding position-relative">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -1910,7 +1910,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 10. TESTIMONIALS */}
-      <section id="testimonials" className="section-padding bg-white">
+      <section id="testimonials" className="section-padding position-relative">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -2023,7 +2023,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* FAQ SECTION */}
-      <section id="faq" className="section-padding bg-light">
+      <section id="faq" className="section-padding position-relative">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -2092,7 +2092,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 11. CALL TO ACTION */}
-      <section id="cta" className="section-padding bg-light">
+      <section id="cta" className="section-padding position-relative">
         <div className="container">
           <ScrollReveal direction="fade">
             <div 
