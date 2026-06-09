@@ -30,7 +30,13 @@ import {
   Play,
   Terminal,
   Zap,
-  CheckCircle
+  CheckCircle,
+  Database,
+  EyeOff,
+  FileMinus,
+  ShieldAlert,
+  ShieldCheck,
+  Layers
 } from 'lucide-react';
 
 // Theme Presets for Dynamic Styling
@@ -289,14 +295,19 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
   };
 
   return (
-    <div className="min-h-screen text-white position-relative" style={{ backgroundColor: 'var(--bg-dark)' }}>
+    <div className="min-h-screen position-relative overflow-hidden">
+      {/* Floating backdrop drifts for animations */}
+      <div className="drift-glow-container">
+        <div className="drift-glow-1"></div>
+        <div className="drift-glow-2"></div>
+        <div className="drift-glow-3"></div>
+      </div>
+
       {/* Dynamic Scroll Progress Bar */}
       <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }}></div>
 
-      {/* Background grid and decorative glows */}
+      {/* Background grid */}
       <div className="bg-grid"></div>
-      <div className="bg-radial-glow" style={{ top: '-10%', left: '-5%' }}></div>
-      <div className="bg-radial-glow animate-rotate" style={{ bottom: '10%', right: '-5%' }}></div>
 
       {/* 1. NAVBAR */}
       <nav className={`navbar navbar-expand-lg glass-navbar sticky-top py-3.5 ${isScrolled ? 'navbar-scrolled' : ''}`}>
@@ -680,7 +691,10 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 4. PROBLEM → SOLUTION SECTION */}
-      <section id="problem" className="section-padding position-relative">
+      <section id="problem" className="section-padding position-relative overflow-hidden">
+        <div className="glow-blob glow-blue" style={{ top: '20%', left: '5%', opacity: 0.15 }}></div>
+        <div className="glow-blob glow-purple" style={{ bottom: '20%', right: '5%', opacity: 0.15 }}></div>
+        
         <div className="container">
           <div className="text-center mb-5 pb-3">
             <ScrollReveal direction="up">
@@ -700,38 +714,59 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Problems */}
             <div className="col-lg-6">
               <ScrollReveal direction="left" delay={150} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(244, 63, 94, 0.12)', background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(244, 63, 94, 0.01) 100%)' }}>
                   <div>
-                    <div className="d-flex align-items-center gap-2.5 mb-4 text-danger">
-                      <i className="bi bi-x-circle-fill fs-4"></i>
-                      <h4 className="mb-0 fw-extrabold">The Fragmented Setup</h4>
+                    <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom border-secondary-subtle">
+                      <span className="bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style={{ width: '46px', height: '46px', borderRadius: '12px' }}>
+                        <ShieldAlert size={22} />
+                      </span>
+                      <div>
+                        <h4 className="mb-0 fw-extrabold text-danger" style={{ fontSize: '1.25rem' }}>The Fragmented Setup</h4>
+                        <span className="text-muted fs-8">Conventional Scattered EdTech</span>
+                      </div>
                     </div>
                     
-                    <div className="problem-card-dark">
-                      <h5 className="fw-extrabold text-dark fs-6 mb-2">6+ Disconnected Platforms</h5>
-                      <p className="text-secondary fs-7 mb-0">
-                        Students learn on Canvas/Moodle, write code locally, compile portfolios on GitHub, construct resumes on Canva, and submit logs via email forms.
-                      </p>
+                    <div className="problem-card-dark d-flex gap-3 align-items-start">
+                      <div className="text-danger mt-1">
+                        <Layers size={18} />
+                      </div>
+                      <div>
+                        <h5 className="fw-extrabold text-dark fs-7 mb-1">6+ Disconnected Platforms</h5>
+                        <p className="text-secondary fs-8 mb-0">
+                          Students learn on Canvas/Moodle, write code locally, compile portfolios on GitHub, construct resumes on Canva, and submit logs via email forms.
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="problem-card-dark">
-                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Zero Predictive Visibility</h5>
-                      <p className="text-secondary fs-7 mb-0">
-                        Placement officers cannot trace student study records in real-time. Learning bottlenecks remain completely hidden until graduation limits are passed.
-                      </p>
+                    <div className="problem-card-dark d-flex gap-3 align-items-start">
+                      <div className="text-danger mt-1">
+                        <EyeOff size={18} />
+                      </div>
+                      <div>
+                        <h5 className="fw-extrabold text-dark fs-7 mb-1">Zero Predictive Visibility</h5>
+                        <p className="text-secondary fs-8 mb-0">
+                          Placement officers cannot trace student study records in real-time. Learning bottlenecks remain completely hidden until graduation limits are passed.
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="problem-card-dark mb-0">
-                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Static PDF Hiring Loop</h5>
-                      <p className="text-secondary fs-7 mb-0">
-                        Recruiters scan unverified PDF resume summaries. Auditing actual coding qualities or repository contributions requires expensive manual testing.
-                      </p>
+                    <div className="problem-card-dark mb-0 d-flex gap-3 align-items-start">
+                      <div className="text-danger mt-1">
+                        <FileMinus size={18} />
+                      </div>
+                      <div>
+                        <h5 className="fw-extrabold text-dark fs-7 mb-1">Static PDF Hiring Loop</h5>
+                        <p className="text-secondary fs-8 mb-0">
+                          Recruiters scan unverified PDF resume summaries. Auditing actual coding qualities or repository contributions requires expensive manual testing.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-4 border-top border-secondary-subtle border-opacity-30">
-                    <span className="text-danger fw-bold fs-7 d-flex align-items-center gap-2">
-                      <i className="bi bi-exclamation-triangle-fill fs-6"></i> Decreases placements conversion rates.
+                  <div className="pt-4 mt-4 border-top border-secondary-subtle">
+                    <span className="text-danger fw-bold fs-8 d-flex align-items-center gap-2">
+                      <span className="pulse-dot bg-danger" style={{ animationName: 'none', width: '6px', height: '6px' }}></span>
+                      Decreases placements conversion rates.
                     </span>
                   </div>
                 </div>
@@ -741,38 +776,59 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Solutions */}
             <div className="col-lg-6">
               <ScrollReveal direction="right" delay={150} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(20, 184, 166, 0.25)' }}>
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(20, 184, 166, 0.2)', background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(20, 184, 166, 0.01) 100%)' }}>
                   <div>
-                    <div className="d-flex align-items-center gap-2.5 mb-4 text-gradient-teal">
-                      <i className="bi bi-check-circle-fill fs-4" style={{ color: 'var(--accent-teal)' }}></i>
-                      <h4 className="mb-0 fw-extrabold text-gradient-teal">The CareerOS Ecosystem</h4>
+                    <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom border-secondary-subtle">
+                      <span className="bg-teal bg-opacity-10 text-teal d-flex align-items-center justify-content-center" style={{ width: '46px', height: '46px', borderRadius: '12px', color: 'var(--accent-teal)', backgroundColor: 'rgba(13, 148, 136, 0.1)' }}>
+                        <ShieldCheck size={22} style={{ color: 'var(--accent-teal)' }} />
+                      </span>
+                      <div>
+                        <h4 className="mb-0 fw-extrabold text-gradient-teal" style={{ fontSize: '1.25rem' }}>The CareerOS Ecosystem</h4>
+                        <span className="text-muted fs-8">AI-Powered Student Lifecycle Suite</span>
+                      </div>
                     </div>
 
-                    <div className="solution-card-dark">
-                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Fully Unified Student Journey</h5>
-                      <p className="text-secondary fs-7 mb-0">
-                        Integrates virtual classrooms, coding labs, verified projects, automated internships, and recruiter pipelines in a single React interface.
-                      </p>
+                    <div className="solution-card-dark d-flex gap-3 align-items-start">
+                      <div className="text-teal mt-1" style={{ color: 'var(--accent-teal)' }}>
+                        <Zap size={18} />
+                      </div>
+                      <div>
+                        <h5 className="fw-extrabold text-dark fs-7 mb-1">Fully Unified Student Journey</h5>
+                        <p className="text-secondary fs-8 mb-0">
+                          Integrates virtual classrooms, coding labs, verified projects, automated internships, and recruiter pipelines in a single React interface.
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="solution-card-dark">
-                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Adaptive AI Performance Audits</h5>
-                      <p className="text-secondary fs-7 mb-0">
-                        Algorithms monitor course study times, code commits, and project scores, dynamically suggesting correct assignments to secure placement.
-                      </p>
+                    <div className="solution-card-dark d-flex gap-3 align-items-start">
+                      <div className="text-teal mt-1" style={{ color: 'var(--accent-teal)' }}>
+                        <Cpu size={18} />
+                      </div>
+                      <div>
+                        <h5 className="fw-extrabold text-dark fs-7 mb-1">Adaptive AI Performance Audits</h5>
+                        <p className="text-secondary fs-8 mb-0">
+                          Algorithms monitor course study times, code commits, and project scores, dynamically suggesting correct assignments to secure placement.
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="solution-card-dark mb-0">
-                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Verified Recruiter Search Portal</h5>
-                      <p className="text-secondary fs-7 mb-0">
-                        Hiring managers filter profiles using verified student project histories. Schedule interviews instantly using verified student credentials.
-                      </p>
+                    <div className="solution-card-dark mb-0 d-flex gap-3 align-items-start">
+                      <div className="text-teal mt-1" style={{ color: 'var(--accent-teal)' }}>
+                        <UserCheck size={18} />
+                      </div>
+                      <div>
+                        <h5 className="fw-extrabold text-dark fs-7 mb-1">Verified Recruiter Search Portal</h5>
+                        <p className="text-secondary fs-8 mb-0">
+                          Hiring managers filter profiles using verified student project histories. Schedule interviews instantly using verified student credentials.
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-4 border-top border-secondary-subtle border-opacity-30">
-                    <span className="text-gradient-teal fw-bold fs-7 d-flex align-items-center gap-2">
-                      <CheckCircle2 size={16} style={{ color: 'var(--accent-teal)' }} /> Improves hiring speeds by over 240%.
+                  <div className="pt-4 mt-4 border-top border-secondary-subtle">
+                    <span className="text-gradient-teal fw-bold fs-8 d-flex align-items-center gap-2">
+                      <CheckCircle2 size={14} style={{ color: 'var(--accent-teal)' }} />
+                      Improves hiring speeds by over 240%.
                     </span>
                   </div>
                 </div>
@@ -803,15 +859,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 1 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={100} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <BookOpen size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <BookOpen size={22} />
+                      </div>
+                      <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 fs-9 py-1 px-2.5 rounded-3">Smart LMS</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">Smart LMS</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Stream virtual lectures, review course catalogs, track learning hours, and compile in-browser exercise tasks.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Integrated video player
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Multi-track course catalog
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> In-browser coding shell
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">📚 Smart LMS</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Stream virtual lectures, review course catalogs, track learning hours, and compile in-browser exercise tasks.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Explore LMS modules</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>
@@ -822,15 +894,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 2 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={150} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <CheckSquare size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <CheckSquare size={22} />
+                      </div>
+                      <span className="badge bg-purple bg-opacity-10 text-purple border border-purple border-opacity-10 fs-9 py-1 px-2.5 rounded-3">Assessments</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">Assignment Tracker</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Automated code execution tests, immediate assignment scores, deadlines warnings, and progress metrics.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-purple" /> Autograding test suites
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-purple" /> Plagiarism detection checks
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} className="text-purple" /> Instant performance charts
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">📝 Assignment Tracker</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Automated code execution tests, immediate assignment scores, deadlines warnings, and progress metrics.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Review test grading</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>
@@ -841,15 +929,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 3 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={200} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <Briefcase size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <Briefcase size={22} />
+                      </div>
+                      <span className="badge bg-teal bg-opacity-10 text-teal border border-teal border-opacity-10 fs-9 py-1 px-2.5 rounded-3" style={{ color: 'var(--accent-teal)', backgroundColor: 'rgba(13, 148, 136, 0.1)' }}>GitHub Sync</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">Project Portfolio</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Pull commits from GitHub repositories, showcase live project links, log peer reviews, and compile verified profiles.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} style={{ color: 'var(--accent-teal)' }} /> Automatic GitHub fetch loops
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} style={{ color: 'var(--accent-teal)' }} /> Live deployment links
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} style={{ color: 'var(--accent-teal)' }} /> peer assessment reviews
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">💻 Project Portfolio</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Pull commits from GitHub repositories, showcase live project links, log peer reviews, and compile verified profiles.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Sync GitHub profiles</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>
@@ -860,15 +964,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 4 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={250} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <UserCheck size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <UserCheck size={22} />
+                      </div>
+                      <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 fs-9 py-1 px-2.5 rounded-3">Workflows</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">Internship System</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Monitor student internship tasks, compile mentor feedback ratings, document logbooks, and track graduation credits.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Corporate task manager
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Mentor review feedback loops
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Logbook attendance checks
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">💼 Internship System</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Monitor student internship tasks, compile mentor feedback ratings, document logbooks, and track graduation credits.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Internship workflow tool</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>
@@ -879,15 +999,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 5 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={300} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <FileText size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <FileText size={22} />
+                      </div>
+                      <span className="badge bg-purple bg-opacity-10 text-purple border border-purple border-opacity-10 fs-9 py-1 px-2.5 rounded-3">AI Engine</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">AI Resume Builder</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Compile ATS-friendly resume versions, scan description keywords, optimize LinkedIn profiles, and draft cover letters.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-purple" /> ATS keywords scanner
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-purple" /> Multi-layout design generator
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} className="text-purple" /> AI Cover letter writer
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">📄 AI Resume Builder</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Compile ATS-friendly resume versions, scan description keywords, optimize LinkedIn profiles, and draft cover letters.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Launch builder engine</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>
@@ -898,15 +1034,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 6 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={350} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <Globe size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <Globe size={22} />
+                      </div>
+                      <span className="badge bg-teal bg-opacity-10 text-teal border border-teal border-opacity-10 fs-9 py-1 px-2.5 rounded-3" style={{ color: 'var(--accent-teal)', backgroundColor: 'rgba(13, 148, 136, 0.1)' }}>Global Pathways</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">Study Abroad Module</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Browse global partner universities, log visa checklists, track scholarship applications, and prepare IELTS files.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} style={{ color: 'var(--accent-teal)' }} /> Partner university indexes
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} style={{ color: 'var(--accent-teal)' }} /> Document storage visa vault
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} style={{ color: 'var(--accent-teal)' }} /> Scholarship timeline logs
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">🌍 Study Abroad Module</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Browse global partner universities, log visa checklists, track scholarship applications, and prepare IELTS files.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Verify global universities</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>
@@ -917,15 +1069,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 7 */}
             <div className="col-md-6 col-lg-4 mx-auto">
               <ScrollReveal direction="up" delay={400} className="h-100">
-                <div className="feature-card-premium text-start">
-                  <div className="feature-icon-wrapper-premium">
-                    <Award size={26} />
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center justify-content-between mb-3.5">
+                      <div className="feature-icon-wrapper-premium mb-0">
+                        <Award size={22} />
+                      </div>
+                      <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 fs-9 py-1 px-2.5 rounded-3">Hiring Hub</span>
+                    </div>
+                    <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">Placement System</h4>
+                    <p className="text-secondary fs-8 mb-4">
+                      Connect directly to recruiter search parameters, apply via referral loops, and schedule online tests.
+                    </p>
+                    <ul className="list-unstyled fs-8 text-secondary mb-4">
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Recruiter search catalogs
+                      </li>
+                      <li className="mb-2 d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Referral shortlisting routes
+                      </li>
+                      <li className="d-flex align-items-center gap-2">
+                        <Check size={14} className="text-primary" /> Integrated coding interviews
+                      </li>
+                    </ul>
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">🧑💼 Placement System</h4>
-                  <p className="text-secondary fs-7 mb-3.5">
-                    Connect directly to recruiter search parameters, apply via referral loops, and schedule online tests.
-                  </p>
-                  <div className="d-flex align-items-center text-primary fw-bold fs-8">
+                  <div className="d-flex align-items-center text-primary fw-bold fs-8 mt-auto pt-3 border-top border-secondary-subtle border-opacity-30" style={{ cursor: 'pointer' }}>
                     <span>Access recruiter filters</span>
                     <ChevronRight size={14} className="ms-1" />
                   </div>

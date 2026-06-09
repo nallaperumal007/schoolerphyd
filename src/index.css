@@ -1,10 +1,10 @@
-/* Premium Light-Theme SaaS Design System */
+/* Premium Light-Theme SaaS Design System with Colorful Mesh Backdrop */
 
 :root {
-  --bg-light: #f8fafc;
-  --bg-white: #ffffff;
-  --card-light: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(99, 102, 241, 0.08);
+  --bg-light: rgba(248, 250, 252, 0.45);
+  --bg-white: rgba(255, 255, 255, 0.7);
+  --card-light: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(255, 255, 255, 0.5);
   
   --accent-1: #6366f1; /* Indigo */
   --accent-2: #d946ef; /* Purple */
@@ -14,23 +14,32 @@
   --teal-gradient: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-1) 100%);
   
   --text-dark: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
   
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
   
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 10px 30px rgba(99, 102, 241, 0.05);
-  --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.05);
-  --shadow-glow: 0 10px 40px rgba(99, 102, 241, 0.12);
-  --shadow-glow-teal: 0 10px 40px rgba(13, 148, 136, 0.12);
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 10px 30px rgba(99, 102, 241, 0.04);
+  --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.04);
+  --shadow-glow: 0 10px 45px rgba(99, 102, 241, 0.1);
+  --shadow-glow-teal: 0 10px 45px rgba(13, 148, 136, 0.1);
 }
 
 body {
   font-family: var(--font-body);
   color: var(--text-secondary);
-  background-color: var(--bg-light);
+  background-color: #f1f5f9;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(217, 70, 239, 0.07) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.07) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.03) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(217, 70, 239, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(13, 148, 136, 0.05) 0px, transparent 50%);
+  background-attachment: fixed;
+  background-size: cover;
   overflow-x: hidden;
   line-height: 1.6;
 }
@@ -58,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-light);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
@@ -87,18 +96,25 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 0%, transparent 70%);
   border-radius: 50%;
   filter: blur(50px);
   z-index: 0;
   pointer-events: none;
 }
 
+/* Overriding Bootstrap default light backgrounds for transparent glass sections */
+.bg-light {
+  background-color: rgba(248, 250, 252, 0.3) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 /* Glassmorphism Panel styles */
 .glass-panel {
   background: var(--card-light);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--card-border);
   box-shadow: var(--shadow-lg);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -110,19 +126,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-navbar {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar-scrolled {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.85);
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.08);
 }
 
 /* Gradients */
@@ -610,4 +626,78 @@ h1, h2, h3, h4, h5, h6 {
 }
 .ai-interactive-panel.active h5 {
   color: var(--text-dark);
+}
+
+/* Floating Backdrop Drift Animations */
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  33% { transform: translate(40px, -60px) scale(1.1) rotate(120deg); }
+  66% { transform: translate(-30px, 30px) scale(0.9) rotate(240deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(360deg); }
+}
+
+.drift-glow-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.drift-glow-1 {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+  top: 15%;
+  left: -10%;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: drift 25s infinite ease-in-out alternate;
+}
+
+.drift-glow-2 {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(217, 70, 239, 0.08) 0%, transparent 70%);
+  top: 45%;
+  right: -10%;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: drift 30s infinite ease-in-out alternate-reverse;
+}
+
+.drift-glow-3 {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+  bottom: 10%;
+  left: 10%;
+  border-radius: 50%;
+  filter: blur(75px);
+  animation: drift 22s infinite ease-in-out alternate;
+}
+
+/* Overriding feature, timeline, and testimonial cards for consistent glassmorphism */
+.feature-card-premium, 
+.testimonial-card-dark, 
+.timeline-card-dark {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+}
+
+.feature-card-premium:hover, 
+.testimonial-card-dark:hover, 
+.timeline-card-dark:hover {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(99, 102, 241, 0.25) !important;
+  box-shadow: var(--shadow-glow), 0 20px 40px rgba(99, 102, 241, 0.08) !important;
 }
