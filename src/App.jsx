@@ -432,7 +432,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <ScrollReveal direction="up" delay={100}>
                 <h1 className="display-4 fw-extrabold lh-sm mb-3.5 glow-text" style={{ fontSize: '3.65rem' }}>
                   One Platform.<br />
-                  <span className="text-gradient">Complete Career Journey.</span>
+                  <span className="text-gradient-animate">Complete Career Journey.</span>
                 </h1>
               </ScrollReveal>
 
@@ -444,7 +444,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
 
               <ScrollReveal direction="up" delay={300}>
                 <div className="d-flex flex-wrap gap-3 mb-5">
-                  <a href="#cta" className="btn btn-primary-gradient px-4.5 py-3 fs-6 d-inline-flex align-items-center gap-2">
+                  <a href="#cta" className="btn btn-primary-gradient cta-glow-pulse px-4.5 py-3 fs-6 d-inline-flex align-items-center gap-2">
                     <span>Start Learning</span>
                     <ArrowRight size={18} />
                   </a>
@@ -651,6 +651,27 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     </div>
                   </div>
 
+                  <div 
+                    className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5" 
+                    style={{ 
+                      top: '25%', 
+                      right: '-45px', 
+                      zIndex: '3', 
+                      maxWidth: '200px', 
+                      transform: 'translateZ(50px)',
+                      animation: 'float-medium 6.5s ease-in-out infinite' 
+                    }}
+                  >
+                    <div className="bg-primary bg-opacity-10 text-primary p-2 rounded-circle d-flex position-relative" style={{ border: '1px solid rgba(99, 102, 241, 0.2)', width: '32px', height: '32px', alignItems: 'center', justifyContent: 'center' }}>
+                      <span className="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" style={{ width: '8px', height: '8px', boxShadow: '0 0 8px #10b981', animation: 'pulse-glow 1.5s infinite' }}><span className="visually-hidden">Active</span></span>
+                      <span style={{ fontSize: '0.9rem' }}>🤖</span>
+                    </div>
+                    <div className="text-start">
+                      <span className="text-muted fs-9 d-block uppercase fw-bold">AI Advisor</span>
+                      <span className="fw-extrabold fs-8 text-dark">Active Now</span>
+                    </div>
+                  </div>
+
                 </div>
               </ScrollReveal>
             </div>
@@ -660,7 +681,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 3. TRUST SECTION */}
-      <section className="bg-white border-top border-bottom border-secondary-subtle border-opacity-20 py-5">
+      <section className="trust-band border-top border-bottom border-secondary-subtle border-opacity-20 py-5">
         <div className="container">
           <ScrollReveal direction="fade">
             <h6 className="text-center text-uppercase fw-extrabold text-muted mb-4 fs-8" style={{ letterSpacing: '0.18em' }}>
@@ -669,26 +690,22 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
           </ScrollReveal>
           
           <ScrollReveal direction="up" delay={100}>
-            <div className="row row-cols-2 row-cols-md-4 g-4 align-items-center justify-content-center text-center pb-4">
-              <div className="col">
-                <div className="trust-logo">
-                  <i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft
-                </div>
-              </div>
-              <div className="col">
-                <div className="trust-logo">
-                  <i className="bi bi-amazon me-2.5 fs-5"></i> Amazon
-                </div>
-              </div>
-              <div className="col">
-                <div className="trust-logo">
-                  <i className="bi bi-google me-2.5 fs-5"></i> Google Cloud
-                </div>
-              </div>
-              <div className="col">
-                <div className="trust-logo">
-                  <i className="bi bi-stripe me-2.5 fs-5"></i> Stripe
-                </div>
+            <div className="marquee-wrapper">
+              <div className="marquee-content">
+                {/* Set 1 */}
+                <div className="trust-logo"><i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft</div>
+                <div className="trust-logo"><i className="bi bi-amazon me-2.5 fs-5"></i> Amazon</div>
+                <div className="trust-logo"><i className="bi bi-google me-2.5 fs-5"></i> Google Cloud</div>
+                <div className="trust-logo"><i className="bi bi-stripe me-2.5 fs-5"></i> Stripe</div>
+                <div className="trust-logo"><i className="bi bi-apple me-2.5 fs-5"></i> Apple</div>
+                <div className="trust-logo"><i className="bi bi-meta me-2.5 fs-5"></i> Meta</div>
+                {/* Set 2 (Duplicate) */}
+                <div className="trust-logo"><i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft</div>
+                <div className="trust-logo"><i className="bi bi-amazon me-2.5 fs-5"></i> Amazon</div>
+                <div className="trust-logo"><i className="bi bi-google me-2.5 fs-5"></i> Google Cloud</div>
+                <div className="trust-logo"><i className="bi bi-stripe me-2.5 fs-5"></i> Stripe</div>
+                <div className="trust-logo"><i className="bi bi-apple me-2.5 fs-5"></i> Apple</div>
+                <div className="trust-logo"><i className="bi bi-meta me-2.5 fs-5"></i> Meta</div>
               </div>
             </div>
           </ScrollReveal>
@@ -699,7 +716,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <div className="col-md-3">
                 <div className="p-2">
                   <h2 className="display-6 fw-extrabold text-gradient mb-1">
-                    {studentsCount.toLocaleString()}+
+                    <span className="count-pop">{studentsCount.toLocaleString()}</span>+
                   </h2>
                   <span className="text-secondary fw-bold fs-7">Active Students</span>
                 </div>
@@ -710,7 +727,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <div className="col-md-3">
                 <div className="p-2">
                   <h2 className="display-6 fw-extrabold text-gradient mb-1">
-                    {placementsCount}+
+                    <span className="count-pop">{placementsCount}</span>+
                   </h2>
                   <span className="text-secondary fw-bold fs-7">High-Tier Placements</span>
                 </div>
@@ -721,7 +738,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <div className="col-md-3">
                 <div className="p-2">
                   <h2 className="display-6 fw-extrabold text-gradient mb-1">
-                    {recruitersCount}+
+                    <span className="count-pop">{recruitersCount}</span>+
                   </h2>
                   <span className="text-secondary fw-bold fs-7">Verified Hiring Partners</span>
                 </div>
@@ -755,7 +772,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Problems */}
             <div className="col-lg-6">
               <ScrollReveal direction="left" delay={150} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(244, 63, 94, 0.12)', background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(244, 63, 94, 0.01) 100%)' }}>
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(244, 63, 94, 0.15)', background: 'radial-gradient(ellipse at top left, rgba(244,63,94,0.06) 0%, transparent 60%), #fff9f9' }}>
                   <div>
                     <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom border-secondary-subtle">
                       <span className="bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style={{ width: '46px', height: '46px', borderRadius: '12px' }}>
@@ -817,7 +834,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Solutions */}
             <div className="col-lg-6">
               <ScrollReveal direction="right" delay={150} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(20, 184, 166, 0.2)', background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(20, 184, 166, 0.01) 100%)' }}>
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ border: '1px solid rgba(13, 148, 136, 0.15)', background: 'radial-gradient(ellipse at top right, rgba(13,148,136,0.06) 0%, transparent 60%), #f0fdf9' }}>
                   <div>
                     <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom border-secondary-subtle">
                       <span className="bg-teal bg-opacity-10 text-teal d-flex align-items-center justify-content-center" style={{ width: '46px', height: '46px', borderRadius: '12px', color: 'var(--accent-teal)', backgroundColor: 'rgba(13, 148, 136, 0.1)' }}>
@@ -900,7 +917,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 1 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={100} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(99, 102, 241, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -935,7 +952,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 2 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={150} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(217, 70, 239, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -970,7 +987,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 3 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={200} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(13, 148, 136, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -1005,7 +1022,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 4 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={250} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(99, 102, 241, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -1040,7 +1057,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 5 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={300} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(217, 70, 239, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -1075,7 +1092,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 6 */}
             <div className="col-md-6 col-lg-4">
               <ScrollReveal direction="up" delay={350} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(13, 148, 136, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -1110,7 +1127,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* Feature 7 */}
             <div className="col-md-6 col-lg-4 mx-auto">
               <ScrollReveal direction="up" delay={400} className="h-100">
-                <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
+                <div className="feature-card-premium text-start d-flex flex-column justify-content-between" style={{ backgroundColor: 'rgba(99, 102, 241, 0.02)' }}>
                   <div>
                     <div className="d-flex align-items-center justify-content-between mb-3.5">
                       <div className="feature-icon-wrapper-premium mb-0">
@@ -1344,6 +1361,12 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <ScrollReveal direction="right" delay={200}>
                 <div className="mock-dashboard-wrapper">
                   <div className="mock-dashboard-body">
+                    {/* Browser Chrome 3-Dot Bar */}
+                    <div className="d-flex align-items-center gap-2 px-3.5 py-2.5 border-bottom border-secondary-subtle bg-light bg-opacity-50">
+                      <span className="rounded-circle" style={{ width: '8px', height: '8px', backgroundColor: '#ff5f56', display: 'inline-block' }}></span>
+                      <span className="rounded-circle" style={{ width: '8px', height: '8px', backgroundColor: '#ffbd2e', display: 'inline-block' }}></span>
+                      <span className="rounded-circle" style={{ width: '8px', height: '8px', backgroundColor: '#27c93f', display: 'inline-block' }}></span>
+                    </div>
                     
                     {/* Header bar */}
                     <div className="d-flex align-items-center justify-content-between p-3 border-bottom border-secondary-subtle bg-light">
@@ -2094,7 +2117,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                 <div className="d-flex flex-wrap justify-content-center gap-3">
                   <button 
                     onClick={() => alert('Welcome to Opulent Vidya CareerOS! Initializing onboarding...')}
-                    className="btn btn-primary-gradient px-4.5 py-3 rounded-pill d-inline-flex align-items-center gap-2"
+                    className="btn btn-primary-gradient cta-glow-pulse px-4.5 py-3 rounded-pill d-inline-flex align-items-center gap-2"
                   >
                     <span>Join as Student</span>
                     <ArrowUpRight size={18} />
@@ -2114,13 +2137,13 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 12. FOOTER */}
-      <footer className="bg-light text-dark pt-5 pb-4 border-top border-secondary-subtle">
+      <footer className="dark-footer pt-5 pb-4 border-top border-secondary-subtle border-opacity-10">
         <div className="container">
           <div className="row g-4 text-start mb-5">
             {/* Col 1 */}
             <div className="col-lg-4 col-md-6">
-              <a className="navbar-brand d-inline-flex align-items-center mb-3 text-dark" href="#hero">
-                <span className="bg-secondary bg-opacity-10 text-primary border border-secondary-subtle d-flex align-items-center justify-content-center me-2" style={{ width: '35px', height: '35px', borderRadius: '8px' }}>
+              <a className="navbar-brand d-inline-flex align-items-center mb-3 text-light" href="#hero">
+                <span className="bg-white bg-opacity-10 text-primary border border-secondary border-opacity-20 d-flex align-items-center justify-content-center me-2" style={{ width: '35px', height: '35px', borderRadius: '8px' }}>
                   <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1rem' }}></i>
                 </span>
                 <span className="fw-extrabold fs-5 text-gradient">CareerOS</span>
@@ -2129,38 +2152,38 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                 Opulent Vidya CareerOS is the premium student lifecycle infrastructure driving next-gen placement rate optimization.
               </p>
               <div className="d-flex gap-3 fs-5">
-                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-twitter"></i></a>
-                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-github"></i></a>
-                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-linkedin"></i></a>
-                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-youtube"></i></a>
+                <a href="#" className="text-secondary"><i className="bi bi-twitter"></i></a>
+                <a href="#" className="text-secondary"><i className="bi bi-github"></i></a>
+                <a href="#" className="text-secondary"><i className="bi bi-linkedin"></i></a>
+                <a href="#" className="text-secondary"><i className="bi bi-youtube"></i></a>
               </div>
             </div>
 
             {/* Col 2 */}
             <div className="col-lg-2 col-md-6 col-6">
-              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Platform</h6>
+              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-secondary">Platform</h6>
               <ul className="list-unstyled fs-7">
-                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-primary">Smart LMS</a></li>
-                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-primary">GitHub Portfolios</a></li>
-                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-primary">ATS Resumes</a></li>
-                <li className="mb-2.5"><a href="#dashboards" className="text-secondary text-decoration-none hover-text-primary">Partner Portals</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none">Smart LMS</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none">GitHub Portfolios</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none">ATS Resumes</a></li>
+                <li className="mb-2.5"><a href="#dashboards" className="text-secondary text-decoration-none">Partner Portals</a></li>
               </ul>
             </div>
 
             {/* Col 3 */}
             <div className="col-lg-2 col-md-6 col-6">
-              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Company</h6>
+              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-secondary">Company</h6>
               <ul className="list-unstyled fs-7">
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">About Us</a></li>
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">Careers</a></li>
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">Partner Program</a></li>
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">Contact Sales</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none">About Us</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none">Careers</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none">Partner Program</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none">Contact Sales</a></li>
               </ul>
             </div>
 
             {/* Col 4 */}
             <div className="col-lg-4 col-md-6">
-              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Newsletter SignUp</h6>
+              <h6 className="fw-bold mb-3 fs-7 text-uppercase text-secondary">Newsletter SignUp</h6>
               <p className="text-secondary fs-7 mb-3">
                 Subscribe to get latest updates about tech placements and career advice.
               </p>
@@ -2170,7 +2193,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="form-control bg-white border-secondary-subtle text-dark fs-7 py-2.5" 
+                  className="form-control bg-dark border-secondary border-opacity-25 text-white fs-7 py-2.5" 
                   placeholder="Enter your email" 
                   required 
                 />
