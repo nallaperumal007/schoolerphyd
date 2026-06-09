@@ -302,7 +302,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       <nav className={`navbar navbar-expand-lg glass-navbar sticky-top py-3.5 ${isScrolled ? 'navbar-scrolled' : ''}`}>
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="#hero">
-            <span className="bg-dark border border-secondary d-flex align-items-center justify-content-center me-2.5" style={{ width: '42px', height: '42px', borderRadius: '12px', boxShadow: 'var(--shadow-glow)' }}>
+            <span className="bg-light border border-secondary-subtle d-flex align-items-center justify-content-center me-2.5" style={{ width: '42px', height: '42px', borderRadius: '12px', boxShadow: 'var(--shadow-glow)' }}>
               <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1.35rem' }}></i>
             </span>
             <div>
@@ -311,35 +311,35 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             </div>
           </a>
           
-          <button className="navbar-toggler border-0 shadow-none text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon" style={{ filter: 'invert(1)' }}></span>
+          <button className="navbar-toggler border-0 shadow-none text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
           </button>
           
           <div className="collapse navbar-collapse" id="navbarContent">
             <ul className="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-3 ${activeLink === 'features' ? 'text-white' : 'text-muted'}`} href="#features" onClick={() => setActiveLink('features')}>Features</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'features' ? 'text-primary' : 'text-secondary'}`} href="#features" onClick={() => setActiveLink('features')}>Features</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-3 ${activeLink === 'problem' ? 'text-white' : 'text-muted'}`} href="#problem" onClick={() => setActiveLink('problem')}>Why Us</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'problem' ? 'text-primary' : 'text-secondary'}`} href="#problem" onClick={() => setActiveLink('problem')}>Why Us</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-3 ${activeLink === 'dashboards' ? 'text-white' : 'text-muted'}`} href="#dashboards" onClick={() => setActiveLink('dashboards')}>Dashboards</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'dashboards' ? 'text-primary' : 'text-secondary'}`} href="#dashboards" onClick={() => setActiveLink('dashboards')}>Dashboards</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-3 ${activeLink === 'ai' ? 'text-white' : 'text-muted'}`} href="#ai" onClick={() => setActiveLink('ai')}>AI Center</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'ai' ? 'text-primary' : 'text-secondary'}`} href="#ai" onClick={() => setActiveLink('ai')}>AI Center</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-3 ${activeLink === 'how-it-works' ? 'text-white' : 'text-muted'}`} href="#how-it-works" onClick={() => setActiveLink('how-it-works')}>Timeline</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'how-it-works' ? 'text-primary' : 'text-secondary'}`} href="#how-it-works" onClick={() => setActiveLink('how-it-works')}>Timeline</a>
               </li>
               <li className="nav-item">
-                <a className={`nav-link fw-semibold px-3 ${activeLink === 'faq' ? 'text-white' : 'text-muted'}`} href="#faq" onClick={() => setActiveLink('faq')}>FAQ</a>
+                <a className={`nav-link fw-semibold px-3 ${activeLink === 'faq' ? 'text-primary' : 'text-secondary'}`} href="#faq" onClick={() => setActiveLink('faq')}>FAQ</a>
               </li>
             </ul>
             
             {/* Real-time Theme selector */}
             <div className="d-flex align-items-center gap-3">
-              <div className="d-flex align-items-center gap-2 border-end border-secondary pe-3 me-2">
+              <div className="d-flex align-items-center gap-2 border-end border-secondary-subtle pe-3 me-2">
                 <span className="text-muted fs-8 fw-bold text-uppercase d-none d-xl-inline">Theme:</span>
                 <div className="d-flex gap-1.5">
                   {THEMES.map((t) => (
@@ -403,7 +403,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               </ScrollReveal>
 
               <ScrollReveal direction="up" delay={400}>
-                <div className="row g-4 pt-4 border-top border-secondary border-opacity-30">
+                <div className="row g-4 pt-4 border-top border-secondary-subtle border-opacity-30">
                   <div className="col-auto">
                     <div className="d-flex align-items-center gap-2">
                       <span className="bg-success bg-opacity-10 text-success p-1 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><Check size={14} /></span>
@@ -441,7 +441,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="mock-dashboard-wrapper">
                     <div className="mock-dashboard-body p-3.5 text-start position-relative">
                       
-                      <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary border-opacity-30 mb-3">
+                      <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary-subtle border-opacity-30 mb-3">
                         <div className="d-flex align-items-center gap-2">
                           <span className="bg-danger rounded-circle d-inline-block" style={{ width: '9px', height: '9px' }}></span>
                           <span className="bg-warning rounded-circle d-inline-block" style={{ width: '9px', height: '9px' }}></span>
@@ -457,13 +457,13 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       <div className="row g-3">
                         {/* Profile Block */}
                         <div className="col-md-7">
-                          <div className="p-3 border border-secondary border-opacity-30 rounded-3 bg-dark bg-opacity-40 h-100">
+                          <div className="p-3 border border-secondary-subtle border-opacity-30 rounded-3 bg-white bg-opacity-80 h-100">
                             <div className="d-flex align-items-center gap-3 mb-3">
-                              <div className="bg-secondary bg-opacity-10 border border-secondary border-opacity-30 text-white rounded-circle d-flex align-items-center justify-content-center fw-extrabold fs-6" style={{ width: '45px', height: '45px', boxShadow: 'var(--shadow-glow)' }}>
+                              <div className="bg-secondary bg-opacity-10 border border-secondary-subtle border-opacity-30 text-dark rounded-circle d-flex align-items-center justify-content-center fw-extrabold fs-6" style={{ width: '45px', height: '45px', boxShadow: 'var(--shadow-glow)' }}>
                                 SV
                               </div>
                               <div>
-                                <h6 className="mb-0 fw-bold text-white fs-6">Siddharth Varma</h6>
+                                <h6 className="mb-0 fw-bold text-dark fs-6">Siddharth Varma</h6>
                                 <span className="text-muted fs-8">MERN Stack Cohort #4</span>
                               </div>
                             </div>
@@ -474,7 +474,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                                 <span>Weekly Activity (Coding Hours)</span>
                                 <span className="fw-bold text-gradient-teal">34.5 hrs</span>
                               </div>
-                              <div className="bg-black bg-opacity-40 border border-secondary border-opacity-20 rounded p-2" style={{ height: '70px' }}>
+                              <div className="bg-light border border-secondary-subtle border-opacity-20 rounded p-2" style={{ height: '70px' }}>
                                 <svg viewBox="0 0 100 30" width="100%" height="100%" preserveAspectRatio="none">
                                   <path 
                                     d="M0,25 Q15,10 30,22 T60,5 T90,15 T100,8" 
@@ -489,7 +489,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                                       <stop offset="100%" stopColor="var(--accent-2)" />
                                     </linearGradient>
                                   </defs>
-                                  <line x1="0" y1="28" x2="100" y2="28" stroke="#1e293b" strokeWidth="1" />
+                                  <line x1="0" y1="28" x2="100" y2="28" stroke="#e2e8f0" strokeWidth="1" />
                                 </svg>
                               </div>
                             </div>
@@ -499,7 +499,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                                 <span>Course syllabus completion</span>
                                 <span className="fw-bold text-gradient">88%</span>
                               </div>
-                              <div className="progress" style={{ height: '5px', backgroundColor: '#1e293b' }}>
+                              <div className="progress" style={{ height: '5px', backgroundColor: '#e2e8f0' }}>
                                 <div className="progress-bar bg-primary" role="progressbar" style={{ width: '88%' }}></div>
                               </div>
                             </div>
@@ -508,7 +508,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
 
                         {/* Resume Block */}
                         <div className="col-md-5">
-                          <div className="p-3 border border-secondary border-opacity-30 rounded-3 bg-dark bg-opacity-40 text-start h-100 d-flex flex-column justify-content-between">
+                          <div className="p-3 border border-secondary-subtle border-opacity-30 rounded-3 bg-white bg-opacity-80 text-start h-100 d-flex flex-column justify-content-between">
                             <div>
                               <span className="text-muted fs-8 fw-extrabold d-block mb-1 text-uppercase">ATS Resume Score</span>
                               <div className="d-flex align-items-baseline gap-2 mb-2">
@@ -516,12 +516,12 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                                 <span className="badge bg-success bg-opacity-10 text-success fs-8 border border-success border-opacity-20">Top 2%</span>
                               </div>
                             </div>
-                            <div className="border-top border-secondary border-opacity-35 pt-2">
+                            <div className="border-top border-secondary-subtle border-opacity-35 pt-2">
                               <span className="text-muted fs-8 d-block text-uppercase mb-1.5">Verified Badges</span>
                               <div className="d-flex flex-wrap gap-1">
-                                <span className="badge bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 fs-9">React</span>
-                                <span className="badge bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 fs-9">Node</span>
-                                <span className="badge bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 fs-9">SQL</span>
+                                <span className="badge bg-secondary bg-opacity-10 text-dark border border-secondary-subtle fs-9">React</span>
+                                <span className="badge bg-secondary bg-opacity-10 text-dark border border-secondary-subtle fs-9">Node</span>
+                                <span className="badge bg-secondary bg-opacity-10 text-dark border border-secondary-subtle fs-9">SQL</span>
                               </div>
                             </div>
                           </div>
@@ -529,17 +529,17 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
 
                         {/* Recruiter Pipelines */}
                         <div className="col-12 text-start">
-                          <div className="p-3 border border-secondary border-opacity-30 rounded-3 bg-dark bg-opacity-40">
-                            <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom border-secondary border-opacity-30">
-                              <h6 className="mb-0 fw-bold fs-7 text-white">Active Recruiter Invites</h6>
+                          <div className="p-3 border border-secondary-subtle border-opacity-30 rounded-3 bg-white bg-opacity-80">
+                            <div className="d-flex justify-content-between align-items-center mb-2.5 pb-2 border-bottom border-secondary-subtle">
+                              <h6 className="mb-0 fw-bold fs-7 text-dark">Active Recruiter Invites</h6>
                               <span className="badge bg-danger bg-opacity-10 text-danger fs-8 border border-danger border-opacity-20">2 Live</span>
                             </div>
                             
                             <div className="d-flex align-items-center justify-content-between mb-2 fs-7">
                               <div className="d-flex align-items-center gap-2">
-                                <span className="bg-primary bg-opacity-10 text-primary border border-primary border-opacity-30 rounded-circle d-flex" style={{ width: '22px', height: '22px', alignItems: 'center', justifyContent: 'center' }}><i className="bi bi-google fs-8"></i></span>
+                                <span className="bg-primary bg-opacity-10 text-primary border border-primary border-opacity-30 rounded-circle d-flex" style={{ width: '22px', height: '22px', alignItems: 'center', justifycontent: 'center' }}><i className="bi bi-google fs-8"></i></span>
                                 <div>
-                                  <span className="fw-bold d-block text-white">Google Cloud India</span>
+                                  <span className="fw-bold d-block text-dark">Google Cloud India</span>
                                   <span className="text-muted" style={{ fontSize: '0.65rem' }}>Backend Engineer Intern</span>
                                 </div>
                               </div>
@@ -548,9 +548,9 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                             
                             <div className="d-flex align-items-center justify-content-between fs-7">
                               <div className="d-flex align-items-center gap-2">
-                                <span className="bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 rounded-circle d-flex" style={{ width: '22px', height: '22px', alignItems: 'center', justifyContent: 'center' }}><i className="bi bi-stripe fs-8"></i></span>
+                                <span className="bg-secondary bg-opacity-10 text-dark border border-secondary-subtle rounded-circle d-flex" style={{ width: '22px', height: '22px', alignItems: 'center', justifycontent: 'center' }}><i className="bi bi-stripe fs-8"></i></span>
                                 <div>
-                                  <span className="fw-bold d-block text-white">Stripe Tech</span>
+                                  <span className="fw-bold d-block text-dark">Stripe Tech</span>
                                   <span className="text-muted" style={{ fontSize: '0.65rem' }}>Front End Engineer</span>
                                 </div>
                               </div>
@@ -564,7 +564,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
 
                   {/* Floating elements */}
                   <div 
-                    className="position-absolute bg-dark rounded-3 p-3 shadow-lg border border-secondary border-opacity-40 d-flex align-items-center gap-2.5" 
+                    className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5" 
                     style={{ 
                       top: '-15px', 
                       left: '-25px', 
@@ -577,12 +577,12 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     <div className="bg-success bg-opacity-10 text-success p-2 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><CheckSquare size={16} /></div>
                     <div className="text-start">
                       <span className="text-muted fs-8 d-block">Assignments</span>
-                      <span className="fw-extrabold fs-7 text-white">100% Passed</span>
+                      <span className="fw-extrabold fs-7 text-dark">100% Passed</span>
                     </div>
                   </div>
 
                   <div 
-                    className="position-absolute bg-dark rounded-3 p-3 shadow-lg border border-secondary border-opacity-40 d-flex align-items-center gap-2.5" 
+                    className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5" 
                     style={{ 
                       bottom: '-15px', 
                       right: '-15px', 
@@ -595,7 +595,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     <div className="bg-warning bg-opacity-10 text-warning p-2 rounded-circle d-flex" style={{ border: '1px solid rgba(234, 179, 8, 0.2)' }}><Globe size={16} /></div>
                     <div className="text-start">
                       <span className="text-muted fs-8 d-block">Global Pathway</span>
-                      <span className="fw-extrabold fs-7 text-white">US MS Offer Secured 🇺🇸</span>
+                      <span className="fw-extrabold fs-7 text-dark">US MS Offer Secured 🇺🇸</span>
                     </div>
                   </div>
 
@@ -608,7 +608,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 3. TRUST SECTION */}
-      <section className="bg-dark bg-opacity-40 border-top border-bottom border-secondary border-opacity-20 py-5">
+      <section className="bg-white border-top border-bottom border-secondary-subtle border-opacity-20 py-5">
         <div className="container">
           <ScrollReveal direction="fade">
             <h6 className="text-center text-uppercase fw-extrabold text-muted mb-4 fs-8" style={{ letterSpacing: '0.18em' }}>
@@ -708,28 +708,28 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     </div>
                     
                     <div className="problem-card-dark">
-                      <h5 className="fw-extrabold text-white fs-6 mb-2">6+ Disconnected Platforms</h5>
+                      <h5 className="fw-extrabold text-dark fs-6 mb-2">6+ Disconnected Platforms</h5>
                       <p className="text-secondary fs-7 mb-0">
                         Students learn on Canvas/Moodle, write code locally, compile portfolios on GitHub, construct resumes on Canva, and submit logs via email forms.
                       </p>
                     </div>
 
                     <div className="problem-card-dark">
-                      <h5 className="fw-extrabold text-white fs-6 mb-2">Zero Predictive Visibility</h5>
+                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Zero Predictive Visibility</h5>
                       <p className="text-secondary fs-7 mb-0">
                         Placement officers cannot trace student study records in real-time. Learning bottlenecks remain completely hidden until graduation limits are passed.
                       </p>
                     </div>
 
                     <div className="problem-card-dark mb-0">
-                      <h5 className="fw-extrabold text-white fs-6 mb-2">Static PDF Hiring Loop</h5>
+                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Static PDF Hiring Loop</h5>
                       <p className="text-secondary fs-7 mb-0">
                         Recruiters scan unverified PDF resume summaries. Auditing actual coding qualities or repository contributions requires expensive manual testing.
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-4 border-top border-secondary border-opacity-30">
+                  <div className="pt-4 mt-4 border-top border-secondary-subtle border-opacity-30">
                     <span className="text-danger fw-bold fs-7 d-flex align-items-center gap-2">
                       <i className="bi bi-exclamation-triangle-fill fs-6"></i> Decreases placements conversion rates.
                     </span>
@@ -749,28 +749,28 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     </div>
 
                     <div className="solution-card-dark">
-                      <h5 className="fw-extrabold text-white fs-6 mb-2">Fully Unified Student Journey</h5>
+                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Fully Unified Student Journey</h5>
                       <p className="text-secondary fs-7 mb-0">
                         Integrates virtual classrooms, coding labs, verified projects, automated internships, and recruiter pipelines in a single React interface.
                       </p>
                     </div>
 
                     <div className="solution-card-dark">
-                      <h5 className="fw-extrabold text-white fs-6 mb-2">Adaptive AI Performance Audits</h5>
+                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Adaptive AI Performance Audits</h5>
                       <p className="text-secondary fs-7 mb-0">
                         Algorithms monitor course study times, code commits, and project scores, dynamically suggesting correct assignments to secure placement.
                       </p>
                     </div>
 
                     <div className="solution-card-dark mb-0">
-                      <h5 className="fw-extrabold text-white fs-6 mb-2">Verified Recruiter Search Portal</h5>
+                      <h5 className="fw-extrabold text-dark fs-6 mb-2">Verified Recruiter Search Portal</h5>
                       <p className="text-secondary fs-7 mb-0">
                         Hiring managers filter profiles using verified student project histories. Schedule interviews instantly using verified student credentials.
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-4 mt-4 border-top border-secondary border-opacity-30">
+                  <div className="pt-4 mt-4 border-top border-secondary-subtle border-opacity-30">
                     <span className="text-gradient-teal fw-bold fs-7 d-flex align-items-center gap-2">
                       <CheckCircle2 size={16} style={{ color: 'var(--accent-teal)' }} /> Improves hiring speeds by over 240%.
                     </span>
@@ -783,7 +783,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 5. CORE FEATURES */}
-      <section id="features" className="section-padding bg-dark bg-opacity-20">
+      <section id="features" className="section-padding bg-light">
         <div className="container">
           <div className="text-center mb-5 pb-3">
             <ScrollReveal direction="up">
@@ -807,7 +807,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <BookOpen size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">📚 Smart LMS</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">📚 Smart LMS</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Stream virtual lectures, review course catalogs, track learning hours, and compile in-browser exercise tasks.
                   </p>
@@ -826,7 +826,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <CheckSquare size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">📝 Assignment Tracker</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">📝 Assignment Tracker</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Automated code execution tests, immediate assignment scores, deadlines warnings, and progress metrics.
                   </p>
@@ -845,7 +845,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <Briefcase size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">💻 Project Portfolio</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">💻 Project Portfolio</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Pull commits from GitHub repositories, showcase live project links, log peer reviews, and compile verified profiles.
                   </p>
@@ -864,7 +864,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <UserCheck size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">💼 Internship System</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">💼 Internship System</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Monitor student internship tasks, compile mentor feedback ratings, document logbooks, and track graduation credits.
                   </p>
@@ -883,7 +883,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <FileText size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">📄 AI Resume Builder</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">📄 AI Resume Builder</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Compile ATS-friendly resume versions, scan description keywords, optimize LinkedIn profiles, and draft cover letters.
                   </p>
@@ -902,7 +902,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <Globe size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">🌍 Study Abroad Module</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">🌍 Study Abroad Module</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Browse global partner universities, log visa checklists, track scholarship applications, and prepare IELTS files.
                   </p>
@@ -921,7 +921,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="feature-icon-wrapper-premium">
                     <Award size={26} />
                   </div>
-                  <h4 className="fw-extrabold mb-2.5 fs-5 text-white">🧑💼 Placement System</h4>
+                  <h4 className="fw-extrabold mb-2.5 fs-5 text-dark">🧑💼 Placement System</h4>
                   <p className="text-secondary fs-7 mb-3.5">
                     Connect directly to recruiter search parameters, apply via referral loops, and schedule online tests.
                   </p>
@@ -937,7 +937,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 6. HOW IT WORKS (FLOW SECTION WITH PARTICLE ANIMATION) */}
-      <section id="how-it-works" className="section-padding bg-dark bg-opacity-40 position-relative overflow-hidden">
+      <section id="how-it-works" className="section-padding bg-light position-relative overflow-hidden">
         <div className="container position-relative z-2">
           
           <div className="text-center mb-5 pb-3">
@@ -958,7 +958,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
           <div className="d-none d-lg-block position-relative my-5" style={{ height: '180px' }}>
             <svg width="100%" height="100%" viewBox="0 0 1000 120" fill="none">
               {/* Connector lines with running particle effect */}
-              <path d="M 50 60 L 950 60" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
+              <path d="M 50 60 L 950 60" stroke="rgba(0,0,0,0.06)" strokeWidth="4" />
               <path 
                 d="M 50 60 L 950 60" 
                 stroke="url(#flowLineGrad)" 
@@ -975,11 +975,11 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               </defs>
 
               {/* Glowing circles */}
-              <circle cx="100" cy="60" r="14" fill="#090d1a" stroke="var(--accent-1)" strokeWidth="3" />
-              <circle cx="300" cy="60" r="14" fill="#090d1a" stroke="var(--accent-1)" strokeWidth="3" />
-              <circle cx="500" cy="60" r="14" fill="#090d1a" stroke="var(--accent-teal)" strokeWidth="3" />
-              <circle cx="700" cy="60" r="14" fill="#090d1a" stroke="var(--accent-2)" strokeWidth="3" />
-              <circle cx="900" cy="60" r="14" fill="#090d1a" stroke="var(--accent-2)" strokeWidth="3" />
+              <circle cx="100" cy="60" r="14" fill="var(--accent-1)" stroke="var(--accent-1)" strokeWidth="3" />
+              <circle cx="300" cy="60" r="14" fill="var(--accent-1)" stroke="var(--accent-1)" strokeWidth="3" />
+              <circle cx="500" cy="60" r="14" fill="var(--accent-teal)" stroke="var(--accent-teal)" strokeWidth="3" />
+              <circle cx="700" cy="60" r="14" fill="var(--accent-2)" stroke="var(--accent-2)" strokeWidth="3" />
+              <circle cx="900" cy="60" r="14" fill="var(--accent-2)" stroke="var(--accent-2)" strokeWidth="3" />
               
               {/* Numbers */}
               <text x="100" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">1</text>
@@ -989,11 +989,11 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <text x="900" y="64" fill="#fff" fontSize="11" fontWeight="bold" textAnchor="middle">5</text>
 
               {/* Node labels */}
-              <text x="100" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">Enrollment</text>
-              <text x="300" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">Smart LMS</text>
-              <text x="500" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">GitHub Projects</text>
-              <text x="700" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">AI Resume</text>
-              <text x="900" y="98" fill="#f8fafc" fontSize="12" fontWeight="bold" textAnchor="middle">Placement</text>
+              <text x="100" y="98" fill="var(--text-dark)" fontSize="12" fontWeight="bold" textAnchor="middle">Enrollment</text>
+              <text x="300" y="98" fill="var(--text-dark)" fontSize="12" fontWeight="bold" textAnchor="middle">Smart LMS</text>
+              <text x="500" y="98" fill="var(--text-dark)" fontSize="12" fontWeight="bold" textAnchor="middle">GitHub Projects</text>
+              <text x="700" y="98" fill="var(--text-dark)" fontSize="12" fontWeight="bold" textAnchor="middle">AI Resume</text>
+              <text x="900" y="98" fill="var(--text-dark)" fontSize="12" fontWeight="bold" textAnchor="middle">Placement</text>
             </svg>
           </div>
 
@@ -1001,35 +1001,35 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             <div className="col">
               <div className="timeline-card-dark">
                 <div className="flow-step-number">01</div>
-                <h6 className="fw-extrabold text-white mt-2">Enrollment</h6>
+                <h6 className="fw-extrabold text-dark mt-2">Enrollment</h6>
                 <p className="text-secondary fs-8 mb-0">Custom study targets and academic pathways.</p>
               </div>
             </div>
             <div className="col">
               <div className="timeline-card-dark">
                 <div className="flow-step-number">02</div>
-                <h6 className="fw-extrabold text-white mt-2">Smart LMS</h6>
+                <h6 className="fw-extrabold text-dark mt-2">Smart LMS</h6>
                 <p className="text-secondary fs-8 mb-0">Virtual lectures, code playgrounds, automatic checks.</p>
               </div>
             </div>
             <div className="col">
               <div className="timeline-card-dark">
                 <div className="flow-step-number">03</div>
-                <h6 className="fw-extrabold text-white mt-2">GitHub Projects</h6>
+                <h6 className="fw-extrabold text-dark mt-2">GitHub Projects</h6>
                 <p className="text-secondary fs-8 mb-0">Showcasing verified coding contributions to recruiters.</p>
               </div>
             </div>
             <div className="col">
               <div className="timeline-card-dark">
                 <div className="flow-step-number">04</div>
-                <h6 className="fw-extrabold text-white mt-2">AI Resume</h6>
+                <h6 className="fw-extrabold text-dark mt-2">AI Resume</h6>
                 <p className="text-secondary fs-8 mb-0">Optimizing resume summaries and skills keywords.</p>
               </div>
             </div>
             <div className="col">
               <div className="timeline-card-dark">
                 <div className="flow-step-number">05</div>
-                <h6 className="fw-extrabold text-white mt-2">Placement</h6>
+                <h6 className="fw-extrabold text-dark mt-2">Placement</h6>
                 <p className="text-secondary fs-8 mb-0">Routing verified portfolios to corporate search feeds.</p>
               </div>
             </div>
@@ -1039,7 +1039,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 7. ROLE-BASED DASHBOARD SECTION (DYNAMIC PREVIEW PANEL) */}
-      <section id="dashboards" className="section-padding bg-dark bg-opacity-20">
+      <section id="dashboards" className="section-padding bg-light">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -1065,7 +1065,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     onClick={() => setActiveRole('student')}
                     className={`role-tab-btn-dark ${activeRole === 'student' ? 'active' : ''}`}
                   >
-                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><GraduationCap size={20} /></span>
+                    <span className="bg-secondary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex border border-secondary-subtle"><GraduationCap size={20} /></span>
                     <div>
                       <span className="d-block fw-bold fs-6">👨🎓 Student Dashboard</span>
                       <span className="text-muted fs-8 fw-normal">Progress & hiring preparation</span>
@@ -1076,7 +1076,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     onClick={() => setActiveRole('trainer')}
                     className={`role-tab-btn-dark ${activeRole === 'trainer' ? 'active' : ''}`}
                   >
-                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Users size={20} /></span>
+                    <span className="bg-secondary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex border border-secondary-subtle"><Users size={20} /></span>
                     <div>
                       <span className="d-block fw-bold fs-6">👨🏫 Trainer Panel</span>
                       <span className="text-muted fs-8 fw-normal">Attendance logs & grades auditing</span>
@@ -1087,7 +1087,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     onClick={() => setActiveRole('recruiter')}
                     className={`role-tab-btn-dark ${activeRole === 'recruiter' ? 'active' : ''}`}
                   >
-                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Briefcase size={20} /></span>
+                    <span className="bg-secondary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex border border-secondary-subtle"><Briefcase size={20} /></span>
                     <div>
                       <span className="d-block fw-bold fs-6">🧑💼 Recruiter Portal</span>
                       <span className="text-muted fs-8 fw-normal">Candidate search filters</span>
@@ -1098,7 +1098,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     onClick={() => setActiveRole('parent')}
                     className={`role-tab-btn-dark ${activeRole === 'parent' ? 'active' : ''}`}
                   >
-                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><UserCheck size={20} /></span>
+                    <span className="bg-secondary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex border border-secondary-subtle"><UserCheck size={20} /></span>
                     <div>
                       <span className="d-block fw-bold fs-6">👨👩👧 Parent View</span>
                       <span className="text-muted fs-8 fw-normal">Grade cards & invoices</span>
@@ -1109,7 +1109,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     onClick={() => setActiveRole('study')}
                     className={`role-tab-btn-dark ${activeRole === 'study' ? 'active' : ''}`}
                   >
-                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Globe size={20} /></span>
+                    <span className="bg-secondary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex border border-secondary-subtle"><Globe size={20} /></span>
                     <div>
                       <span className="d-block fw-bold fs-6">🎓 Study Abroad Advisor</span>
                       <span className="text-muted fs-8 fw-normal">Visa tracking & university programs</span>
@@ -1120,7 +1120,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     onClick={() => setActiveRole('admin')}
                     className={`role-tab-btn-dark ${activeRole === 'admin' ? 'active' : ''}`}
                   >
-                    <span className="bg-secondary bg-opacity-10 text-white p-2 rounded-3 me-3 d-flex border border-secondary border-opacity-35"><Shield size={20} /></span>
+                    <span className="bg-secondary bg-opacity-10 text-primary p-2 rounded-3 me-3 d-flex border border-secondary-subtle"><Shield size={20} /></span>
                     <div>
                       <span className="d-block fw-bold fs-6">🛠️ Admin Panel</span>
                       <span className="text-muted fs-8 fw-normal">Cohort setups & global stats</span>
@@ -1137,9 +1137,9 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   <div className="mock-dashboard-body">
                     
                     {/* Header bar */}
-                    <div className="d-flex align-items-center justify-content-between p-3 border-bottom border-secondary border-opacity-20 bg-dark bg-opacity-50">
+                    <div className="d-flex align-items-center justify-content-between p-3 border-bottom border-secondary-subtle bg-light">
                       <div className="d-flex align-items-center gap-2">
-                        <span className="badge text-bg-dark text-uppercase fs-8 px-2 py-1.5 rounded-2 border border-secondary border-opacity-40">
+                        <span className="badge bg-secondary bg-opacity-10 text-dark text-uppercase fs-8 px-2 py-1.5 rounded-2 border border-secondary-subtle">
                           {activeRole === 'study' ? 'study_abroad' : activeRole} Portal
                         </span>
                         <span className="text-muted fs-8 d-flex align-items-center gap-1.5"><Lock size={12} /> SSL Secured</span>
@@ -1157,43 +1157,43 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                         <div>
                           <div className="row g-3 mb-4">
                             <div className="col-md-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Active Syllabus Topic</span>
-                                <h6 className="fw-extrabold mb-1 text-white">Advanced React Hooks & Context API</h6>
+                                <h6 className="fw-extrabold mb-1 text-dark">Advanced React Hooks & Context API</h6>
                                 <span className="text-primary fs-8 fw-bold d-flex align-items-center gap-1.5"><Clock size={12} /> Ends in 40 mins</span>
                               </div>
                             </div>
                             <div className="col-md-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Next Homework Assignment</span>
-                                <h6 className="fw-extrabold mb-1 text-white">PostgreSQL DB Optimization Tasks</h6>
+                                <h6 className="fw-extrabold mb-1 text-dark">PostgreSQL DB Optimization Tasks</h6>
                                 <span className="text-danger fs-8 fw-bold d-flex align-items-center gap-1.5"><i className="bi bi-exclamation-triangle-fill"></i> Due in 12 hours</span>
                               </div>
                             </div>
                           </div>
                           
-                          <h6 className="fw-extrabold mb-3 text-white fs-7">Live Progress & Preparation Index</h6>
-                          <div className="p-3.5 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-30 mb-3">
+                          <h6 className="fw-extrabold mb-3 text-dark fs-7">Live Progress & Preparation Index</h6>
+                          <div className="p-3.5 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90 mb-3">
                             <div className="d-flex justify-content-between text-muted fs-8 mb-2">
                               <span>Verified Projects Completed</span>
                               <span className="fw-extrabold text-success">4 / 5 Github Verified</span>
                             </div>
-                            <div className="progress mb-4" style={{ height: '8px', backgroundColor: '#1e293b' }}>
+                            <div className="progress mb-4" style={{ height: '8px', backgroundColor: '#e2e8f0' }}>
                               <div className="progress-bar bg-success" style={{ width: '80%' }}></div>
                             </div>
                             
                             <div className="row g-3">
                               <div className="col-6 col-sm-3">
                                 <span className="text-muted fs-8 d-block text-uppercase mb-1">Resume Score</span>
-                                <span className="fw-extrabold text-white fs-5">94 / 100</span>
+                                <span className="fw-extrabold text-dark fs-5">94 / 100</span>
                               </div>
                               <div className="col-6 col-sm-3">
                                 <span className="text-muted fs-8 d-block text-uppercase mb-1">Mock test status</span>
-                                <span className="fw-extrabold text-white fs-5">85% Passed</span>
+                                <span className="fw-extrabold text-dark fs-5">85% Passed</span>
                               </div>
                               <div className="col-6 col-sm-3">
                                 <span className="text-muted fs-8 d-block text-uppercase mb-1">Mentor Rating</span>
-                                <span className="fw-extrabold text-white fs-5">4.8 / 5.0</span>
+                                <span className="fw-extrabold text-dark fs-5">4.8 / 5.0</span>
                               </div>
                               <div className="col-6 col-sm-3">
                                 <span className="text-muted fs-8 d-block text-uppercase mb-1">Interview Invites</span>
@@ -1207,36 +1207,36 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       {activeRole === 'trainer' && (
                         <div>
                           <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h6 className="fw-extrabold mb-0 text-white">Cohort Overview: Full-Stack Web Dev (Cohort B)</h6>
+                            <h6 className="fw-extrabold mb-0 text-dark">Cohort Overview: Full-Stack Web Dev (Cohort B)</h6>
                             <span className="badge bg-primary bg-opacity-10 text-primary fs-8 border border-primary border-opacity-20">Total: 48 Registered</span>
                           </div>
                           
                           <div className="row g-3 mb-4 text-center">
                             <div className="col-md-4">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Syllabus Attendance</span>
                                 <h4 className="fw-extrabold mb-0 text-success">94.2%</h4>
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Avg GitHub Commits</span>
                                 <h4 className="fw-extrabold mb-0 text-primary">4.1 / wk</h4>
                               </div>
                             </div>
                             <div className="col-md-4">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Tasks Pending Grading</span>
                                 <h4 className="fw-extrabold mb-0 text-warning">14 Tasks</h4>
                               </div>
                             </div>
                           </div>
                           
-                          <h6 className="fw-extrabold mb-3 text-white">Priority Action Alerts</h6>
-                          <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-danger bg-opacity-10 text-danger-emphasis fs-7 mb-2 d-flex justify-content-between align-items-center" style={{ border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                          <h6 className="fw-extrabold mb-3 text-dark">Priority Action Alerts</h6>
+                          <div className="p-3 border border-danger border-opacity-20 rounded-3 bg-danger bg-opacity-10 text-danger-emphasis fs-7 mb-2 d-flex justify-content-between align-items-center">
                             <span className="d-flex align-items-center gap-2">
                               <i className="bi bi-exclamation-triangle-fill text-danger"></i>
-                              <span className="text-white"><strong>Aaryan Sen</strong> has not submitted Portfolio Project #3 (Due 2d ago)</span>
+                              <span className="text-dark"><strong>Aaryan Sen</strong> has not submitted Portfolio Project #3 (Due 2d ago)</span>
                             </span>
                             <button onClick={() => alert('Pinged Aaryan Sen regarding Portfolio Project #3')} className="btn btn-sm btn-danger py-1 px-2.5 fs-8">Ping Student</button>
                           </div>
@@ -1246,43 +1246,43 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       {activeRole === 'recruiter' && (
                         <div>
                           <div className="d-flex justify-content-between align-items-center mb-3.5">
-                            <h6 className="fw-extrabold mb-0 text-white">Search Qualified Student Database</h6>
+                            <h6 className="fw-extrabold mb-0 text-dark">Search Qualified Student Database</h6>
                             <span className="text-muted fs-8 fw-semibold">Filtered by Verified Projects</span>
                           </div>
                           
                           <div className="input-group mb-3.5 shadow-sm rounded-3">
-                            <span className="input-group-text bg-dark border-secondary text-muted border-end-0"><Search size={18} /></span>
-                            <input type="text" className="form-control bg-dark border-secondary text-white border-start-0 py-2.5 fs-7" placeholder="e.g. 'React', 'Node.js', ATS Score > 90..." defaultValue="React, PostgreSQL, ATS Score > 90" />
+                            <span className="input-group-text bg-white border-secondary-subtle text-muted border-end-0"><Search size={18} /></span>
+                            <input type="text" className="form-control bg-white border-secondary-subtle text-dark border-start-0 py-2.5 fs-7" placeholder="e.g. 'React', 'Node.js', ATS Score > 90..." defaultValue="React, PostgreSQL, ATS Score > 90" />
                             <button className="btn btn-primary-gradient px-4.5 py-2.5 fs-7">Search</button>
                           </div>
 
                           {/* Matching circles */}
                           <div className="row g-3 mb-3">
                             <div className="col-md-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex align-items-center justify-content-between">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90 d-flex align-items-center justify-content-between">
                                 <div>
                                   <span className="text-muted fs-8 d-block text-uppercase mb-0.5">Top Matched Candidate</span>
-                                  <span className="fw-extrabold text-white d-block">Sneha Reddy</span>
+                                  <span className="fw-extrabold text-dark d-block">Sneha Reddy</span>
                                   <span className="text-muted fs-8">95% Match Score</span>
                                 </div>
                                 <svg width="45" height="45" viewBox="0 0 36 36">
-                                  <path stroke="#1e293b" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <path stroke="#e2e8f0" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                   <path stroke="var(--accent-1)" strokeWidth="3.5" strokeDasharray="95, 100" fill="none" strokeLinecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                  <text x="18" y="21.5" className="fw-extrabold" fill="#fff" fontSize="10" textAnchor="middle">95</text>
+                                  <text x="18" y="21.5" className="fw-extrabold" fill="var(--text-dark)" fontSize="10" textAnchor="middle">95</text>
                                 </svg>
                               </div>
                             </div>
                             <div className="col-md-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex align-items-center justify-content-between">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90 d-flex align-items-center justify-content-between">
                                 <div>
                                   <span className="text-muted fs-8 d-block text-uppercase mb-0.5">Recommended Candidate</span>
-                                  <span className="fw-extrabold text-white d-block">Vikas Khanna</span>
+                                  <span className="fw-extrabold text-dark d-block">Vikas Khanna</span>
                                   <span className="text-muted fs-8">91% Match Score</span>
                                 </div>
                                 <svg width="45" height="45" viewBox="0 0 36 36">
-                                  <path stroke="#1e293b" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                  <path stroke="#e2e8f0" strokeWidth="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                   <path stroke="var(--accent-2)" strokeWidth="3.5" strokeDasharray="91, 100" fill="none" strokeLinecap="round" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                  <text x="18" y="21.5" className="fw-extrabold" fill="#fff" fontSize="10" textAnchor="middle">91</text>
+                                  <text x="18" y="21.5" className="fw-extrabold" fill="var(--text-dark)" fontSize="10" textAnchor="middle">91</text>
                                 </svg>
                               </div>
                             </div>
@@ -1293,32 +1293,32 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       {activeRole === 'parent' && (
                         <div>
                           <div className="d-flex align-items-center gap-3 mb-4">
-                            <div className="bg-secondary bg-opacity-10 text-white rounded-circle d-flex align-items-center justify-content-center fw-extrabold fs-6" style={{ width: '46px', height: '46px', boxShadow: '0 4px 10px rgba(99, 102, 241, 0.15)' }}>KV</div>
+                            <div className="bg-secondary bg-opacity-10 text-dark rounded-circle d-flex align-items-center justify-content-center fw-extrabold fs-6" style={{ width: '46px', height: '46px', boxShadow: '0 4px 10px rgba(99, 102, 241, 0.15)' }}>KV</div>
                             <div>
-                              <h6 className="mb-0 fw-bold text-white">Ward Name: Kabir Varma</h6>
+                              <h6 className="mb-0 fw-bold text-dark">Ward Name: Kabir Varma</h6>
                               <span className="text-muted fs-8">MERN Cohort B — Student ID: #KV901</span>
                             </div>
                           </div>
                           
                           <div className="row g-3 mb-4 text-start">
                             <div className="col-sm-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Weekly Attendance Rate</span>
                                 <span className="fw-extrabold text-success fs-5">98% (Exceeds Target)</span>
                               </div>
                             </div>
                             <div className="col-sm-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1.5 text-uppercase fw-bold">Latest Exam Grade</span>
                                 <span className="fw-extrabold text-primary fs-5">A+ (Advanced APIs)</span>
                               </div>
                             </div>
                           </div>
                           
-                          <h6 className="fw-extrabold mb-3 text-white">Installment Receipts</h6>
-                          <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex justify-content-between align-items-center">
+                          <h6 className="fw-extrabold mb-3 text-dark">Installment Receipts</h6>
+                          <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90 d-flex justify-content-between align-items-center">
                             <div>
-                              <span className="fw-extrabold fs-7 d-block text-white">Term Installment #2</span>
+                              <span className="fw-extrabold fs-7 d-block text-dark">Term Installment #2</span>
                               <span className="text-muted fs-8">Paid on June 01, 2026</span>
                             </div>
                             <span className="badge bg-success bg-opacity-10 text-success py-2 px-3 fs-8 rounded-pill d-flex align-items-center gap-1.5 border border-success border-opacity-20">Paid <i className="bi bi-check-circle"></i></span>
@@ -1329,34 +1329,34 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       {activeRole === 'study' && (
                         <div>
                           <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h6 className="fw-extrabold mb-0 text-white">Global Studies Pathway Integration</h6>
+                            <h6 className="fw-extrabold mb-0 text-dark">Global Studies Pathway Integration</h6>
                             <span className="badge bg-warning bg-opacity-10 text-warning fs-8 border border-warning border-opacity-20">4 Partner Institutions</span>
                           </div>
                           
                           <div className="row g-3 mb-4">
                             <div className="col-md-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="badge bg-primary bg-opacity-10 text-primary mb-2 border border-primary border-opacity-20">GERMANY</span>
-                                <h6 className="fw-extrabold text-white">TU Munich (TUM)</h6>
+                                <h6 className="fw-extrabold text-dark">TU Munich (TUM)</h6>
                                 <p className="text-muted fs-8 mb-2">Target Program: MS Informatics (Winter Intake)</p>
                                 <span className="text-success fs-8 fw-semibold"><i className="bi bi-check-circle-fill me-1"></i> Application Verified</span>
                               </div>
                             </div>
                             <div className="col-md-6">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="badge bg-purple bg-opacity-10 text-purple mb-2 border border-purple border-opacity-20">UNITED STATES</span>
-                                <h6 className="fw-extrabold text-white">Northeastern University</h6>
+                                <h6 className="fw-extrabold text-dark">Northeastern University</h6>
                                 <p className="text-muted fs-8 mb-2">Target Program: MS Computer Science (Fall Intake)</p>
                                 <span className="text-warning fs-8 fw-semibold"><Clock size={12} className="me-1" /> Document Auditing Stage</span>
                               </div>
                             </div>
                           </div>
                           
-                          <h6 className="fw-extrabold mb-3 text-white">Required Documents Progress</h6>
-                          <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40 d-flex justify-content-between fs-8 text-muted">
+                          <h6 className="fw-extrabold mb-3 text-dark">Required Documents Progress</h6>
+                          <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90 d-flex justify-content-between fs-8 text-muted">
                             <div>
                               <span className="d-block">IELTS Target</span>
-                              <span className="fw-bold text-white">7.5 Band (Verified)</span>
+                              <span className="fw-bold text-dark">7.5 Band (Verified)</span>
                             </div>
                             <div>
                               <span className="d-block">WES Credentials</span>
@@ -1372,41 +1372,41 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
 
                       {activeRole === 'admin' && (
                         <div>
-                          <h6 className="fw-extrabold mb-4 text-white">Global Administration Panel</h6>
+                          <h6 className="fw-extrabold mb-4 text-dark">Global Administration Panel</h6>
                           
                           <div className="row g-3 mb-4 text-center">
                             <div className="col-6 col-md-3">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Cohorts Active</span>
-                                <span className="fw-extrabold text-white fs-4">24 Cohorts</span>
+                                <span className="fw-extrabold text-dark fs-4">24 Cohorts</span>
                               </div>
                             </div>
                             <div className="col-6 col-md-3">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">Academic Staff</span>
-                                <span className="fw-extrabold text-white fs-4">18 Trainers</span>
+                                <span className="fw-extrabold text-dark fs-4">18 Trainers</span>
                               </div>
                             </div>
                             <div className="col-6 col-md-3">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">System Uptime</span>
                                 <span className="fw-extrabold text-success fs-4">99.98%</span>
                               </div>
                             </div>
                             <div className="col-6 col-md-3">
-                              <div className="p-3 border border-secondary border-opacity-20 rounded-3 bg-dark bg-opacity-40">
+                              <div className="p-3 border border-secondary-subtle border-opacity-20 rounded-3 bg-white bg-opacity-90">
                                 <span className="text-muted fs-8 d-block mb-1 text-uppercase fw-bold">API Requests</span>
                                 <span className="fw-extrabold text-primary fs-4">42K / hr</span>
                               </div>
                             </div>
                           </div>
                           
-                          <div className="card border-0 p-3 bg-dark text-white rounded-3">
+                          <div className="card border-0 p-3 bg-light text-dark rounded-3 border border-secondary-subtle shadow-sm">
                             <div className="d-flex justify-content-between align-items-center mb-2">
                               <span className="text-success fs-8 fw-bold d-flex align-items-center gap-1.5"><Activity size={14} /> System Activity Logs</span>
                               <span className="badge bg-secondary fs-9">Real-Time</span>
                             </div>
-                            <pre className="mb-0 fs-8 text-white-50 overflow-hidden" style={{ maxHeight: '70px', fontFamily: 'monospace' }}>
+                            <pre className="mb-0 fs-8 text-secondary overflow-hidden" style={{ maxHeight: '70px', fontFamily: 'monospace' }}>
                               [14:32:01] AUTH: Student KV901 token refresh success<br />
                               [14:32:05] INTEGRATION: Automated Github pull for SV998 - OK<br />
                               [14:32:11] AI: Injected ATS suggestions for 14 candidates
@@ -1428,7 +1428,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 8. AI CENTER */}
-      <section id="ai" className="section-padding bg-gradient-ai text-white position-relative overflow-hidden">
+      <section id="ai" className="section-padding bg-gradient-ai text-dark position-relative overflow-hidden">
         <div className="glow-blob glow-blue"></div>
         <div className="glow-blob glow-purple"></div>
 
@@ -1440,7 +1440,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                 <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-20 mb-2 fs-7 px-3 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5" style={{ color: 'var(--accent-teal)' }}>
                   <Sparkles size={14} style={{ color: 'var(--accent-teal)' }} /> AI Engine Core
                 </span>
-                <h2 className="display-5 fw-extrabold mb-3 text-white">Continuous Intelligence</h2>
+                <h2 className="display-5 fw-extrabold mb-3 text-dark">Continuous Intelligence</h2>
                 <p className="text-secondary mb-4 fs-6">
                   Experience how our algorithms support students 24/7. Click a tool below to run our AI sandbox simulator.
                 </p>
@@ -1454,7 +1454,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       className={`ai-interactive-panel h-100 ${aiModule === 'advisor' ? 'active' : ''}`}
                     >
                       <div className="text-purple mb-2"><Cpu size={24} style={{ color: 'var(--accent-2)' }} /></div>
-                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Career Advisor</h5>
+                      <h5 className="fw-bold fs-7 mb-1 text-dark">AI Career Advisor</h5>
                       <span className="text-secondary fs-9">Suggested roadmaps & tracks</span>
                     </div>
                   </ScrollReveal>
@@ -1467,7 +1467,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       className={`ai-interactive-panel h-100 ${aiModule === 'scheduler' ? 'active' : ''}`}
                     >
                       <div className="text-purple mb-2"><Calendar size={24} style={{ color: 'var(--accent-teal)' }} /></div>
-                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Scheduler</h5>
+                      <h5 className="fw-bold fs-7 mb-1 text-dark">AI Scheduler</h5>
                       <span className="text-secondary fs-9">Automated timetable updates</span>
                     </div>
                   </ScrollReveal>
@@ -1480,7 +1480,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       className={`ai-interactive-panel h-100 ${aiModule === 'doubt' ? 'active' : ''}`}
                     >
                       <div className="text-purple mb-2"><MessageSquare size={24} style={{ color: 'var(--accent-1)' }} /></div>
-                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Doubt Assistant</h5>
+                      <h5 className="fw-bold fs-7 mb-1 text-dark">AI Doubt Assistant</h5>
                       <span className="text-secondary fs-9">24/7 technical answers</span>
                     </div>
                   </ScrollReveal>
@@ -1493,7 +1493,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       className={`ai-interactive-panel h-100 ${aiModule === 'resume' ? 'active' : ''}`}
                     >
                       <div className="text-purple mb-2"><FileText size={24} style={{ color: 'var(--accent-2)' }} /></div>
-                      <h5 className="fw-bold fs-7 mb-1 text-white">AI Resume Optimizer</h5>
+                      <h5 className="fw-bold fs-7 mb-1 text-dark">AI Resume Optimizer</h5>
                       <span className="text-secondary fs-9">Instant ATS suggestions</span>
                     </div>
                   </ScrollReveal>
@@ -1504,24 +1504,24 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             {/* AI Output screen */}
             <div className="col-lg-7">
               <ScrollReveal direction="right" delay={150}>
-                <div className="card bg-dark border-secondary border-opacity-30 rounded-4 shadow-lg p-4 text-start">
+                <div className="card bg-white border-secondary-subtle border-opacity-30 rounded-4 shadow-lg p-4 text-start">
                   
-                  <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary border-opacity-20 mb-3">
+                  <div className="d-flex align-items-center justify-content-between pb-3 border-bottom border-secondary-subtle border-opacity-20 mb-3">
                     <div className="d-flex align-items-center gap-2">
-                      <span className="bg-secondary bg-opacity-10 border border-secondary border-opacity-35 d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px', borderRadius: '8px' }}>
+                      <span className="bg-secondary bg-opacity-10 border border-secondary-subtle d-flex align-items-center justify-content-center" style={{ width: '32px', height: '32px', borderRadius: '8px' }}>
                         <i className="bi bi-cpu text-gradient fs-6"></i>
                       </span>
-                      <span className="fw-bold text-white fs-7">Interactive AI Sandbox</span>
+                      <span className="fw-bold text-dark fs-7">Interactive AI Sandbox</span>
                     </div>
                     <div className="d-flex align-items-center gap-2">
-                      <span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-20 fs-8">Model: CareerOS-GPT-v4</span>
+                      <span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle fs-8">Model: CareerOS-GPT-v4</span>
                     </div>
                   </div>
 
                   {/* Input display */}
                   <div className="mb-4">
                     <label className="text-secondary fs-8 fw-semibold mb-1.5 uppercase d-block">Prompt request</label>
-                    <div className="p-3 rounded-3 bg-secondary bg-opacity-10 border border-secondary border-opacity-20 text-secondary fs-7">
+                    <div className="p-3 rounded-3 bg-secondary bg-opacity-10 border border-secondary-subtle fs-7 text-secondary">
                       {aiPrompt}
                     </div>
                   </div>
@@ -1529,7 +1529,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   {/* Sandbox answer text */}
                   <div>
                     <label className="text-secondary fs-8 fw-semibold mb-1.5 uppercase d-block">AI response output</label>
-                    <div className="p-3.5 rounded-3 bg-black bg-opacity-40 border border-secondary border-opacity-20 text-white fs-7 min-h-150 position-relative" style={{ minHeight: '220px', fontFamily: 'monospace' }}>
+                    <div className="p-3.5 rounded-3 bg-light border border-secondary-subtle text-dark fs-7 min-h-150 position-relative" style={{ minHeight: '220px', fontFamily: 'monospace' }}>
                       {isAiLoading ? (
                         <div className="position-absolute top-50 start-50 translate-middle text-center">
                           <div className="mb-2">
@@ -1559,7 +1559,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 9. DASHBOARD PREVIEW */}
-      <section className="section-padding bg-dark bg-opacity-10">
+      <section className="section-padding bg-light">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -1582,25 +1582,25 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <ScrollReveal direction="up" delay={100} className="h-100">
                 <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
                   <div>
-                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-30">
-                      <h6 className="fw-extrabold text-white mb-0 d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary-subtle">
+                      <h6 className="fw-extrabold text-dark mb-0 d-flex align-items-center gap-2">
                         <TrendingUp size={16} className="text-primary" /> Placements Rate
                       </h6>
                       <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-20 fs-8">Monthly</span>
                     </div>
-                    <h3 className="fw-extrabold text-white mb-1">91.4%</h3>
+                    <h3 className="fw-extrabold text-dark mb-1">91.4%</h3>
                     <span className="text-success fs-8 fw-bold d-block mb-3.5">
                       <i className="bi bi-arrow-up-right me-1"></i> +8.2% vs last semester
                     </span>
                   </div>
-                  <div className="p-3 border border-secondary border-opacity-20 bg-dark bg-opacity-40 rounded-3">
+                  <div className="p-3 border border-secondary-subtle border-opacity-20 bg-white bg-opacity-90 rounded-3">
                     <div className="d-flex justify-content-between fs-8 text-muted mb-2">
                       <span>Highest Package Offered</span>
-                      <span className="fw-bold text-white">42.5 LPA</span>
+                      <span className="fw-bold text-dark">42.5 LPA</span>
                     </div>
                     <div className="d-flex justify-content-between fs-8 text-muted">
                       <span>Average Cohort Package</span>
-                      <span className="fw-bold text-white">8.7 LPA</span>
+                      <span className="fw-bold text-dark">8.7 LPA</span>
                     </div>
                   </div>
                 </div>
@@ -1612,31 +1612,31 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <ScrollReveal direction="up" delay={200} className="h-100">
                 <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
                   <div>
-                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-30">
-                      <h6 className="fw-extrabold text-white mb-0 d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary-subtle">
+                      <h6 className="fw-extrabold text-dark mb-0 d-flex align-items-center gap-2">
                         <Users size={16} className="text-primary" /> Active Cohorts
                       </h6>
                       <span className="badge bg-purple bg-opacity-10 text-purple border border-purple border-opacity-20 fs-8">14 Cohorts</span>
                     </div>
-                    <h3 className="fw-extrabold text-white mb-1">1,240</h3>
+                    <h3 className="fw-extrabold text-dark mb-1">1,240</h3>
                     <span className="text-muted fs-8 d-block mb-3.5">Total registered active learners</span>
                   </div>
-                  <div className="p-3 border border-secondary border-opacity-20 bg-dark bg-opacity-40 rounded-3">
+                  <div className="p-3 border border-secondary-subtle border-opacity-20 bg-white bg-opacity-90 rounded-3">
                     <div className="mb-2">
                       <div className="d-flex justify-content-between fs-8 text-muted mb-1">
                         <span>Software Engineering</span>
-                        <span className="fw-bold text-white">620</span>
+                        <span className="fw-bold text-dark">620</span>
                       </div>
-                      <div className="progress" style={{ height: '4px', backgroundColor: '#1e293b' }}>
+                      <div className="progress" style={{ height: '4px', backgroundColor: '#e2e8f0' }}>
                         <div className="progress-bar bg-primary" style={{ width: '50%' }}></div>
                       </div>
                     </div>
                     <div>
                       <div className="d-flex justify-content-between fs-8 text-muted mb-1">
                         <span>Design & Product</span>
-                        <span className="fw-bold text-white">440</span>
+                        <span className="fw-bold text-dark">440</span>
                       </div>
-                      <div className="progress" style={{ height: '4px', backgroundColor: '#1e293b' }}>
+                      <div className="progress" style={{ height: '4px', backgroundColor: '#e2e8f0' }}>
                         <div className="progress-bar bg-purple" style={{ width: '35%' }}></div>
                       </div>
                     </div>
@@ -1650,22 +1650,22 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               <ScrollReveal direction="up" delay={300} className="h-100">
                 <div className="feature-card-premium text-start d-flex flex-column justify-content-between">
                   <div>
-                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-30">
-                      <h6 className="fw-extrabold text-white mb-0 d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary-subtle">
+                      <h6 className="fw-extrabold text-dark mb-0 d-flex align-items-center gap-2">
                         <Award size={16} className="text-primary" /> Recruiter Pipeline
                       </h6>
                       <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-20 fs-8">Weekly</span>
                     </div>
-                    <h3 className="fw-extrabold text-white mb-1">28</h3>
+                    <h3 className="fw-extrabold text-dark mb-1">28</h3>
                     <span className="text-muted fs-8 d-block mb-3.5">Recruiters scheduling interviews this week</span>
                   </div>
-                  <div className="p-3 border border-secondary border-opacity-20 bg-dark bg-opacity-40 rounded-3">
-                    <div className="d-flex align-items-center gap-2.5 mb-2 pb-2 border-bottom border-secondary border-opacity-30">
+                  <div className="p-3 border border-secondary-subtle border-opacity-20 bg-white bg-opacity-90 rounded-3">
+                    <div className="d-flex align-items-center gap-2.5 mb-2 pb-2 border-bottom border-secondary-subtle">
                       <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fs-8 fw-bold" style={{ width: '24px', height: '24px' }}>AZ</div>
                       <span className="fs-8 text-muted">Amazon India — <strong>14 shortcut invites</strong></span>
                     </div>
                     <div className="d-flex align-items-center gap-2.5">
-                      <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fs-8 fw-bold" style={{ width: '24px', height: '24px' }}>MS</div>
+                      <div className="bg-light text-dark border border-secondary-subtle rounded-circle d-flex align-items-center justify-content-center fs-8 fw-bold" style={{ width: '24px', height: '24px' }}>MS</div>
                       <span className="fs-8 text-muted">Microsoft — <strong>8 shortlist placements</strong></span>
                     </div>
                   </div>
@@ -1678,7 +1678,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 10. TESTIMONIALS */}
-      <section id="testimonials" className="section-padding bg-dark bg-opacity-40">
+      <section id="testimonials" className="section-padding bg-white">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -1718,7 +1718,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100&h=100" alt="Student" />
                     </div>
                     <div>
-                      <h6 className="fw-extrabold mb-0 fs-6 text-white">Divya Nair</h6>
+                      <h6 className="fw-extrabold mb-0 fs-6 text-dark">Divya Nair</h6>
                       <span className="text-muted fs-8">Student placed at Microsoft</span>
                     </div>
                   </div>
@@ -1748,7 +1748,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" alt="Recruiter" />
                     </div>
                     <div>
-                      <h6 className="fw-extrabold mb-0 fs-6 text-white">Rohan Malhotra</h6>
+                      <h6 className="fw-extrabold mb-0 fs-6 text-dark">Rohan Malhotra</h6>
                       <span className="text-muted fs-8">Hiring Lead at Google Cloud</span>
                     </div>
                   </div>
@@ -1778,7 +1778,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                       <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100&h=100" alt="Trainer" />
                     </div>
                     <div>
-                      <h6 className="fw-extrabold mb-0 fs-6 text-white">Dr. Amit Varma</h6>
+                      <h6 className="fw-extrabold mb-0 fs-6 text-dark">Dr. Amit Varma</h6>
                       <span className="text-muted fs-8">Dean, Career Pathways Academy</span>
                     </div>
                   </div>
@@ -1791,7 +1791,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* FAQ SECTION */}
-      <section id="faq" className="section-padding bg-dark bg-opacity-20">
+      <section id="faq" className="section-padding bg-light">
         <div className="container">
           
           <div className="text-center mb-5 pb-3">
@@ -1860,24 +1860,24 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 11. CALL TO ACTION */}
-      <section id="cta" className="section-padding bg-dark bg-opacity-40">
+      <section id="cta" className="section-padding bg-light">
         <div className="container">
           <ScrollReveal direction="fade">
             <div 
               className="card border-0 rounded-5 p-5 position-relative overflow-hidden text-center shadow-lg"
               style={{
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(99, 102, 241, 0.15) 100%)',
-                border: '1px solid rgba(99, 102, 241, 0.3) !important'
+                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(217, 70, 239, 0.05) 100%)',
+                border: '1px solid rgba(99, 102, 241, 0.12) !important'
               }}
             >
               <div className="glow-blob glow-blue" style={{ top: '-10%', left: '-10%', width: '250px', height: '250px' }}></div>
               <div className="glow-blob glow-purple" style={{ bottom: '-10%', right: '-10%', width: '250px', height: '250px' }}></div>
 
               <div className="position-relative z-2 py-4">
-                <span className="badge bg-secondary bg-opacity-20 text-white border border-secondary border-opacity-30 fw-extrabold mb-3 text-uppercase fs-8 py-1.5 px-3 rounded-5">
+                <span className="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-20 fw-extrabold mb-3 text-uppercase fs-8 py-1.5 px-3 rounded-5">
                   Secure Access
                 </span>
-                <h2 className="display-4 fw-extrabold mb-3 text-white">Start Your Career Journey Today</h2>
+                <h2 className="display-4 fw-extrabold mb-3 text-dark">Start Your Career Journey Today</h2>
                 <p className="lead text-secondary mx-auto mb-5" style={{ maxWidth: '620px', fontSize: '1.1rem' }}>
                   Join over 10,000+ students, 200+ recruiters, and leading academic institutions. Get started now to transform your learning into high-tier placements.
                 </p>
@@ -1905,13 +1905,13 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
       </section>
 
       {/* 12. FOOTER */}
-      <footer className="bg-dark text-white pt-5 pb-4 border-top border-secondary border-opacity-15">
+      <footer className="bg-light text-dark pt-5 pb-4 border-top border-secondary-subtle">
         <div className="container">
           <div className="row g-4 text-start mb-5">
             {/* Col 1 */}
             <div className="col-lg-4 col-md-6">
-              <a className="navbar-brand d-inline-flex align-items-center mb-3 text-white" href="#hero">
-                <span className="bg-secondary bg-opacity-10 text-white border border-secondary border-opacity-30 d-flex align-items-center justify-content-center me-2" style={{ width: '35px', height: '35px', borderRadius: '8px' }}>
+              <a className="navbar-brand d-inline-flex align-items-center mb-3 text-dark" href="#hero">
+                <span className="bg-secondary bg-opacity-10 text-primary border border-secondary-subtle d-flex align-items-center justify-content-center me-2" style={{ width: '35px', height: '35px', borderRadius: '8px' }}>
                   <i className="bi bi-rocket-takeoff-fill text-gradient" style={{ fontSize: '1rem' }}></i>
                 </span>
                 <span className="fw-extrabold fs-5 text-gradient">CareerOS</span>
@@ -1920,10 +1920,10 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                 Opulent Vidya CareerOS is the premium student lifecycle infrastructure driving next-gen placement rate optimization.
               </p>
               <div className="d-flex gap-3 fs-5">
-                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-twitter"></i></a>
-                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-github"></i></a>
-                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-linkedin"></i></a>
-                <a href="#" className="text-secondary hover-text-white"><i className="bi bi-youtube"></i></a>
+                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-twitter"></i></a>
+                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-github"></i></a>
+                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-linkedin"></i></a>
+                <a href="#" className="text-secondary hover-text-primary"><i className="bi bi-youtube"></i></a>
               </div>
             </div>
 
@@ -1931,10 +1931,10 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             <div className="col-lg-2 col-md-6 col-6">
               <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Platform</h6>
               <ul className="list-unstyled fs-7">
-                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-white">Smart LMS</a></li>
-                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-white">GitHub Portfolios</a></li>
-                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-white">ATS Resumes</a></li>
-                <li className="mb-2.5"><a href="#dashboards" className="text-secondary text-decoration-none hover-text-white">Partner Portals</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-primary">Smart LMS</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-primary">GitHub Portfolios</a></li>
+                <li className="mb-2.5"><a href="#features" className="text-secondary text-decoration-none hover-text-primary">ATS Resumes</a></li>
+                <li className="mb-2.5"><a href="#dashboards" className="text-secondary text-decoration-none hover-text-primary">Partner Portals</a></li>
               </ul>
             </div>
 
@@ -1942,10 +1942,10 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             <div className="col-lg-2 col-md-6 col-6">
               <h6 className="fw-bold mb-3 fs-7 text-uppercase text-muted">Company</h6>
               <ul className="list-unstyled fs-7">
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">About Us</a></li>
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">Careers</a></li>
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">Partner Program</a></li>
-                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-white">Contact Sales</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">About Us</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">Careers</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">Partner Program</a></li>
+                <li className="mb-2.5"><a href="#" className="text-secondary text-decoration-none hover-text-primary">Contact Sales</a></li>
               </ul>
             </div>
 
@@ -1961,7 +1961,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="form-control bg-dark border-secondary text-white fs-7 py-2.5" 
+                  className="form-control bg-white border-secondary-subtle text-dark fs-7 py-2.5" 
                   placeholder="Enter your email" 
                   required 
                 />
@@ -1978,7 +1978,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
             </div>
           </div>
 
-          <div className="border-top border-secondary border-opacity-15 pt-4 text-center">
+          <div className="border-top border-secondary-subtle pt-4 text-center">
             <span className="text-secondary fs-8">
               &copy; {new Date().getFullYear()} Opulent Vidya CareerOS. All Rights Reserved. Made with ❤️ in React & Bootstrap.
             </span>
