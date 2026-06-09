@@ -783,8 +783,8 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                         <ShieldCheck size={22} style={{ color: 'var(--accent-teal)' }} />
                       </span>
                       <div>
-                        <h4 className="mb-0 fw-extrabold text-gradient-teal" style={{ fontSize: '1.25rem' }}>The CareerOS Ecosystem</h4>
-                        <span className="text-muted fs-8">AI-Powered Student Lifecycle Suite</span>
+                        <h4 className="mb-0 fw-extrabold text-gradient-teal d-block" style={{ fontSize: '1.25rem' }}>The CareerOS Ecosystem</h4>
+                        <span className="d-block text-muted fs-8">AI-Powered Student Lifecycle Suite</span>
                       </div>
                     </div>
 

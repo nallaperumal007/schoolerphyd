@@ -594,14 +594,15 @@ h1, h2, h3, h4, h5, h6 {
 /* Scroll reveal helper classes */
 .reveal-base {
   opacity: 0;
-  transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
 }
 
-.reveal-up { transform: translateY(60px); }
-.reveal-down { transform: translateY(-60px); }
-.reveal-left { transform: translateX(60px); }
-.reveal-right { transform: translateX(-60px); }
-.reveal-fade { transform: scale(0.94); }
+.reveal-up { transform: translateY(50px) scale(0.92); }
+.reveal-down { transform: translateY(-50px) scale(0.92); }
+.reveal-left { transform: translateX(50px) scale(0.92); }
+.reveal-right { transform: translateX(-50px) scale(0.92); }
+.reveal-fade { transform: scale(0.88); }
 
 .reveal-base.revealed {
   opacity: 1;
