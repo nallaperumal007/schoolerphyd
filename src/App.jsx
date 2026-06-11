@@ -435,7 +435,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
               </ScrollReveal>
 
               <ScrollReveal direction="up" delay={100}>
-                <h1 className="display-4 fw-extrabold lh-sm mb-3.5 glow-text" style={{ fontSize: '3.65rem' }}>
+                <h1 className="display-4 fw-extrabold lh-sm mb-3.5 glow-text hero-title">
                   One Platform.<br />
                   <span className="text-gradient-animate">Complete Career Journey.</span>
                 </h1>
@@ -620,17 +620,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                   </div>
 
                   {/* Floating elements */}
-                  <div 
-                    className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5" 
-                    style={{ 
-                      top: '-15px', 
-                      left: '-25px', 
-                      zIndex: '3', 
-                      maxWidth: '180px', 
-                      transform: 'translateZ(30px)',
-                      animation: 'float 5s ease-in-out infinite'
-                    }}
-                  >
+                  <div className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5 hero-floating-badge-1">
                     <div className="bg-success bg-opacity-10 text-success p-2 rounded-circle d-flex" style={{ border: '1px solid rgba(20, 184, 166, 0.2)' }}><CheckSquare size={16} /></div>
                     <div className="text-start">
                       <span className="text-muted fs-8 d-block">Assignments</span>
@@ -638,17 +628,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     </div>
                   </div>
 
-                  <div 
-                    className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5" 
-                    style={{ 
-                      bottom: '-15px', 
-                      right: '-15px', 
-                      zIndex: '3', 
-                      maxWidth: '220px', 
-                      transform: 'translateZ(40px)',
-                      animation: 'float-slow 8s ease-in-out infinite' 
-                    }}
-                  >
+                  <div className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5 hero-floating-badge-2">
                     <div className="bg-warning bg-opacity-10 text-warning p-2 rounded-circle d-flex" style={{ border: '1px solid rgba(234, 179, 8, 0.2)' }}><Globe size={16} /></div>
                     <div className="text-start">
                       <span className="text-muted fs-8 d-block">Global Pathway</span>
@@ -656,17 +636,7 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
                     </div>
                   </div>
 
-                  <div 
-                    className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5" 
-                    style={{ 
-                      top: '25%', 
-                      right: '-45px', 
-                      zIndex: '3', 
-                      maxWidth: '200px', 
-                      transform: 'translateZ(50px)',
-                      animation: 'float-medium 6.5s ease-in-out infinite' 
-                    }}
-                  >
+                  <div className="position-absolute bg-white rounded-3 p-3 shadow-lg border border-secondary-subtle d-flex align-items-center gap-2.5 hero-floating-badge-3">
                     <div className="bg-primary bg-opacity-10 text-primary p-2 rounded-circle d-flex position-relative" style={{ border: '1px solid rgba(99, 102, 241, 0.2)', width: '32px', height: '32px', alignItems: 'center', justifyContent: 'center' }}>
                       <span className="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle" style={{ width: '8px', height: '8px', boxShadow: '0 0 8px #10b981', animation: 'pulse-glow 1.5s infinite' }}><span className="visually-hidden">Active</span></span>
                       <span style={{ fontSize: '0.9rem' }}>🤖</span>
