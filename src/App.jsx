@@ -176,8 +176,13 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Stats intersection observer
+  const [statsRef, statsVisible] = useIntersectionObserver({ triggerOnce: true, threshold: 0.1 });
+
   // Stats count up animation
   useEffect(() => {
+    if (!statsVisible) return;
+    
     const duration = 1800;
     const steps = 60;
     const stepTime = duration / steps;
@@ -195,7 +200,7 @@ function App() {
     }, stepTime);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [statsVisible]);
 
   // Character typing simulation
   const typeText = (text) => {
@@ -690,57 +695,70 @@ Keywords injected: Microservices, API Latency, Scalability, Docker, Kubernetes.`
           </ScrollReveal>
           
           <ScrollReveal direction="up" delay={100}>
-            <div className="marquee-wrapper">
-              <div className="marquee-content">
-                {/* Set 1 */}
-                <div className="trust-logo"><i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft</div>
-                <div className="trust-logo"><i className="bi bi-amazon me-2.5 fs-5"></i> Amazon</div>
-                <div className="trust-logo"><i className="bi bi-google me-2.5 fs-5"></i> Google Cloud</div>
-                <div className="trust-logo"><i className="bi bi-stripe me-2.5 fs-5"></i> Stripe</div>
-                <div className="trust-logo"><i className="bi bi-apple me-2.5 fs-5"></i> Apple</div>
-                <div className="trust-logo"><i className="bi bi-meta me-2.5 fs-5"></i> Meta</div>
-                {/* Set 2 (Duplicate) */}
-                <div className="trust-logo"><i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft</div>
-                <div className="trust-logo"><i className="bi bi-amazon me-2.5 fs-5"></i> Amazon</div>
-                <div className="trust-logo"><i className="bi bi-google me-2.5 fs-5"></i> Google Cloud</div>
-                <div className="trust-logo"><i className="bi bi-stripe me-2.5 fs-5"></i> Stripe</div>
-                <div className="trust-logo"><i className="bi bi-apple me-2.5 fs-5"></i> Apple</div>
-                <div className="trust-logo"><i className="bi bi-meta me-2.5 fs-5"></i> Meta</div>
+            <div className="logo-slider-container">
+              <div className="marquee-wrapper">
+                <div className="marquee-content">
+                  {/* Set 1 */}
+                  <div className="trust-logo brand-microsoft"><i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft</div>
+                  <div className="trust-logo brand-amazon"><i className="bi bi-amazon me-2.5 fs-5"></i> Amazon</div>
+                  <div className="trust-logo brand-google"><i className="bi bi-google me-2.5 fs-5"></i> Google Cloud</div>
+                  <div className="trust-logo brand-stripe"><i className="bi bi-stripe me-2.5 fs-5"></i> Stripe</div>
+                  <div className="trust-logo brand-apple"><i className="bi bi-apple me-2.5 fs-5"></i> Apple</div>
+                  <div className="trust-logo brand-meta"><i className="bi bi-meta me-2.5 fs-5"></i> Meta</div>
+                  {/* Set 2 (Duplicate) */}
+                  <div className="trust-logo brand-microsoft"><i className="bi bi-microsoft me-2.5 fs-5"></i> Microsoft</div>
+                  <div className="trust-logo brand-amazon"><i className="bi bi-amazon me-2.5 fs-5"></i> Amazon</div>
+                  <div className="trust-logo brand-google"><i className="bi bi-google me-2.5 fs-5"></i> Google Cloud</div>
+                  <div className="trust-logo brand-stripe"><i className="bi bi-stripe me-2.5 fs-5"></i> Stripe</div>
+                  <div className="trust-logo brand-apple"><i className="bi bi-apple me-2.5 fs-5"></i> Apple</div>
+                  <div className="trust-logo brand-meta"><i className="bi bi-meta me-2.5 fs-5"></i> Meta</div>
+                </div>
               </div>
             </div>
           </ScrollReveal>
 
           {/* Counts */}
           <ScrollReveal direction="up" delay={200}>
-            <div className="row g-4 mt-3 text-center justify-content-center border-top border-secondary border-opacity-25 pt-4">
-              <div className="col-md-3">
-                <div className="p-2">
-                  <h2 className="display-6 fw-extrabold text-gradient mb-1">
-                    <span className="count-pop">{studentsCount.toLocaleString()}</span>+
-                  </h2>
-                  <span className="text-secondary fw-bold fs-7">Active Students</span>
+            <div className="row g-4 mt-4 justify-content-center" ref={statsRef}>
+              {/* Stat 1 */}
+              <div className="col-md-4 col-lg-3">
+                <div className="stat-card glass-panel p-4 text-center h-100 position-relative overflow-hidden">
+                  <div className="stat-card-glow"></div>
+                  <div className="stat-icon-wrapper mb-3.5 mx-auto">
+                    <GraduationCap size={24} className="text-primary" />
+                  </div>
+                  <h3 className="display-6 fw-extrabold text-gradient mb-1.5">
+                    <span>{studentsCount.toLocaleString()}</span>+
+                  </h3>
+                  <p className="text-secondary fw-bold mb-0 fs-7">Active Students</p>
                 </div>
               </div>
-              <div className="col-md-1 d-none d-md-flex align-items-center justify-content-center">
-                <div className="vr h-75 bg-secondary bg-opacity-20 mx-auto" style={{ width: '1px' }}></div>
-              </div>
-              <div className="col-md-3">
-                <div className="p-2">
-                  <h2 className="display-6 fw-extrabold text-gradient mb-1">
-                    <span className="count-pop">{placementsCount}</span>+
-                  </h2>
-                  <span className="text-secondary fw-bold fs-7">High-Tier Placements</span>
+              
+              {/* Stat 2 */}
+              <div className="col-md-4 col-lg-3">
+                <div className="stat-card glass-panel p-4 text-center h-100 position-relative overflow-hidden">
+                  <div className="stat-card-glow"></div>
+                  <div className="stat-icon-wrapper mb-3.5 mx-auto">
+                    <TrendingUp size={24} className="text-teal" style={{ color: 'var(--accent-teal)' }} />
+                  </div>
+                  <h3 className="display-6 fw-extrabold text-gradient-teal mb-1.5">
+                    <span>{placementsCount}</span>+
+                  </h3>
+                  <p className="text-secondary fw-bold mb-0 fs-7">High-Tier Placements</p>
                 </div>
               </div>
-              <div className="col-md-1 d-none d-md-flex align-items-center justify-content-center">
-                <div className="vr h-75 bg-secondary bg-opacity-20 mx-auto" style={{ width: '1px' }}></div>
-              </div>
-              <div className="col-md-3">
-                <div className="p-2">
-                  <h2 className="display-6 fw-extrabold text-gradient mb-1">
-                    <span className="count-pop">{recruitersCount}</span>+
-                  </h2>
-                  <span className="text-secondary fw-bold fs-7">Verified Hiring Partners</span>
+
+              {/* Stat 3 */}
+              <div className="col-md-4 col-lg-3">
+                <div className="stat-card glass-panel p-4 text-center h-100 position-relative overflow-hidden">
+                  <div className="stat-card-glow"></div>
+                  <div className="stat-icon-wrapper mb-3.5 mx-auto">
+                    <UserCheck size={24} className="text-primary" />
+                  </div>
+                  <h3 className="display-6 fw-extrabold text-gradient mb-1.5">
+                    <span>{recruitersCount}</span>+
+                  </h3>
+                  <p className="text-secondary fw-bold mb-0 fs-7">Verified Hiring Partners</p>
                 </div>
               </div>
             </div>

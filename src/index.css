@@ -934,14 +934,70 @@ h1, h2, h3, h4, h5, h6 {
   100% { transform: translateX(2px) translateY(-5px); }
 }
 
-/* Count pop */
+/* Count pop (entrance pop) */
 .count-pop {
   display: inline-block;
   animation: count-pop-anim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 @keyframes count-pop-anim {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { transform: scale(0.8); }
+  100% { transform: scale(1); }
+}
+
+/* Stats Cards Premium Style */
+.stat-card {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(99, 102, 241, 0.25) !important;
+  box-shadow: var(--shadow-glow), 0 20px 40px rgba(99, 102, 241, 0.06) !important;
+}
+
+.stat-card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.stat-card:hover .stat-card-glow {
+  opacity: 1;
+}
+
+.stat-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stat-card:hover .stat-icon-wrapper {
+  background: var(--primary-gradient);
+  border-color: transparent;
+  transform: scale(1.1) rotate(4deg);
+}
+
+.stat-card:hover .stat-icon-wrapper svg {
+  color: #fff !important;
 }
 
 /* Scroll progress glow sweep */
@@ -1002,21 +1058,34 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0;
 }
 
-/* Trust Band scrolling marquee */
+/* Trust Band logo slider container */
+.logo-slider-container {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 28px;
+  padding: 0.65rem 1rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.015), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  margin-bottom: 3.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
 .marquee-wrapper {
   overflow: hidden;
   width: 100%;
   position: relative;
   display: flex;
-  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  padding: 1.5rem 0;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  padding: 0.75rem 0;
 }
 .marquee-content {
   display: flex;
-  gap: 3.5rem;
+  gap: 2rem;
   width: max-content;
-  animation: scroll-marquee 25s linear infinite;
+  animation: scroll-marquee 28s linear infinite;
 }
 @keyframes scroll-marquee {
   0% { transform: translateX(0); }
@@ -1115,17 +1184,59 @@ footer.dark-footer .text-secondary {
 .trust-logo {
   display: flex;
   align-items: center;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: #475569;
+  color: #64748b; /* slate-500 for a unified clean look */
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 18px;
+  padding: 0.65rem 1.4rem;
   white-space: nowrap;
-  opacity: 0.75;
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.015);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.trust-logo i {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
 }
 
 .trust-logo:hover {
-  opacity: 1;
-  color: var(--accent-1);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(99, 102, 241, 0.22);
+  color: #0f172a !important;
+}
+
+.trust-logo:hover i {
+  transform: scale(1.15);
+}
+
+/* Individual Brand Hover Themes */
+.brand-microsoft:hover i {
+  color: #f25022; /* Microsoft Orange/Red */
+}
+
+.brand-amazon:hover i {
+  color: #ff9900; /* Amazon Yellow */
+}
+
+.brand-google:hover i {
+  color: #4285f4; /* Google Blue */
+}
+
+.brand-stripe:hover i {
+  color: #635bff; /* Stripe Purple */
+}
+
+.brand-apple:hover i {
+  color: #000000; /* Apple Black */
+}
+
+.brand-meta:hover i {
+  color: #0668e1; /* Meta Blue */
 }
 
 @media (max-width: 991.98px) {
@@ -1143,4 +1254,25 @@ footer.dark-footer .text-secondary {
 
 .bg-gradient-ai {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(217, 70, 239, 0.03) 100%);
+}
+
+/* Decorative Glow Blobs background effects */
+.glow-blob {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.35;
+  transition: all 0.5s ease;
+}
+
+.glow-blue {
+  background: radial-gradient(circle, var(--accent-1) 0%, transparent 70%);
+}
+
+.glow-purple {
+  background: radial-gradient(circle, var(--accent-2) 0%, transparent 70%);
 }
